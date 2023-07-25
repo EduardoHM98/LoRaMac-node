@@ -183,6 +183,18 @@ elseif(BOARD STREQUAL B-L072Z-LRWAN1)
 
     # Configure radio
     set(RADIO sx1276 CACHE INTERNAL "Radio sx1276 selected")
+
+elseif(BOARD STREQUAL HTLRBL32L)
+    # Configure toolchain for HTLRBL32L
+    set(LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/boards/HTLRBL32L/cmsis/arm-gcc/BlueNRG_LPS.ld)
+    include(stm32l0)
+
+    # Build platform specific board implementation
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boards/HTLRBL32L)
+
+    # Configure radio
+    set(RADIO sx126x CACHE INTERNAL "Radio sx1262 selected")
+    
 endif()
 
 #---------------------------------------------------------------------------------------
