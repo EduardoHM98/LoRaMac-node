@@ -10,7 +10,7 @@
         //     Linux   : /usr
         //     OSX     : /usr/local
         // It is required to uncomment and to fill the following line.
-        "TOOLCHAIN_PREFIX":"C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/12.2 mpacbti-rel1",
+        "TOOLCHAIN_PREFIX":"C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10",
 
         // In case your OpenOCD is not installed under the default path:
         //     Windows : C:/openocd/bin/openocd.exe
@@ -90,6 +90,18 @@
     },
     "files.associations": {
         "se-identity.h": "c",
-        "system_stm32l0xx.h": "c"
+        "system_stm32l0xx.h": "c",
+        "rf_driver_hal.h": "c",
+        "system_bluenrg_lp.h": "c",
+        "spi-board.h": "c",
+        "bluenrg_lpx.h": "c",
+        "utilities.h": "c",
+        "sysirqhandlers.h": "c",
+        "board-config.h": "c",
+        "adc-board.h": "c",
+        "system_util.h": "c",
+        "core_cm0plus.h": "c",
+        "eeprom-board.h": "c",
+        "adc.h": "c"
     }
 }
