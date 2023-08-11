@@ -20,7 +20,7 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
-#include "stm32l0xx.h"
+#include "bluenrg_lpx.h"
 #include "utilities.h"
 #include "sysIrqHandlers.h"
 #include "board-config.h"
@@ -56,16 +56,6 @@ void GpioMcuInit( Gpio_t *obj, PinNames pin, PinModes mode, PinConfigs config, P
         {
             obj->port = GPIOB;
             __HAL_RCC_GPIOB_CLK_ENABLE( );
-        }
-        else if( ( obj->pin & 0xF0 ) == 0x20 )
-        {
-            obj->port = GPIOC;
-            __HAL_RCC_GPIOC_CLK_ENABLE( );
-        }
-        else if( ( obj->pin & 0xF0 ) == 0x30 )
-        {
-            obj->port = GPIOD;
-            __HAL_RCC_GPIOD_CLK_ENABLE( );
         }
         else
         {
@@ -184,29 +174,13 @@ void GpioMcuSetInterrupt( Gpio_t *obj, IrqModes irqMode, IrqPriorities irqPriori
             break;
         }
 
-        switch( obj->pinIndex )
+        switch( obj->port )
         {
-        case GPIO_PIN_0:
-        case GPIO_PIN_1:
-            IRQnb = EXTI0_1_IRQn;
+        case GPIOA:
+            IRQnb = GPIOA_IRQn;
             break;
-        case GPIO_PIN_2:
-        case GPIO_PIN_3:
-            IRQnb = EXTI2_3_IRQn;
-            break;
-        case GPIO_PIN_4:
-        case GPIO_PIN_5:
-        case GPIO_PIN_6:
-        case GPIO_PIN_7:
-        case GPIO_PIN_8:
-        case GPIO_PIN_9:
-        case GPIO_PIN_10:
-        case GPIO_PIN_11:
-        case GPIO_PIN_12:
-        case GPIO_PIN_13:
-        case GPIO_PIN_14:
-        case GPIO_PIN_15:
-            IRQnb = EXTI4_15_IRQn;
+        case GPIOB:
+            IRQnb = GPIOB_IRQn;
             break;
         default:
             break;
