@@ -29,6 +29,8 @@
  * \author    Daniel Jaeckle ( STACKFORCE )
  *
  * \author    Johannes Bruder ( STACKFORCE )
+ * 
+ * \author    Christian Lehmen ( HT )
  */
 #ifndef __BOARD_CONFIG_H__
 #define __BOARD_CONFIG_H__
@@ -41,26 +43,28 @@ extern "C"
 /*!
  * Defines the time required for the TCXO to wakeup [ms].
  */
-#define BOARD_TCXO_WAKEUP_TIME                      5
+#define BOARD_TCXO_WAKEUP_TIME                      0 // no TCXO
 
 /*!
  * Board MCU pins definitions
  */
-#define RADIO_RESET                                 PC_0
+#define RADIO_RESET                                 PB_8
 
-#define RADIO_MOSI                                  PA_7
-#define RADIO_MISO                                  PA_6
-#define RADIO_SCLK                                  PB_3
+#define RADIO_MOSI                                  PB_14
+#define RADIO_MISO                                  PA_14
+#define RADIO_SCLK                                  PA_13
 
-#define RADIO_NSS                                   PA_15
+#define RADIO_NSS                                   PA_11
 
-#define RADIO_DIO_0                                 PB_4
-#define RADIO_DIO_1                                 PB_1
-#define RADIO_DIO_2                                 PB_0
-#define RADIO_DIO_3                                 PC_13
-#define RADIO_DIO_4                                 PA_5
-#define RADIO_DIO_5                                 PA_4
+//#define RADIO_DIO_0                                 PB_4
+#define RADIO_DIO_1                                 PB_4
+//#define RADIO_DIO_2                                 PB_0
+//#define RADIO_DIO_3                                 PC_13
+//#define RADIO_DIO_4                                 PA_5
+//#define RADIO_DIO_5                                 PA_4
 
+#define RADIO_SWITCH_ENABLE                         PB_0
+/*
 #define RADIO_TCXO_POWER                            PA_12
 
 #define RADIO_ANT_SWITCH_RX                         PA_1
@@ -97,7 +101,7 @@ extern "C"
 // Debug pins definition.
 #define RADIO_DBG_PIN_TX                            PB_13
 #define RADIO_DBG_PIN_RX                            PB_14
-
+*/
 #ifdef __cplusplus
 }
 #endif
