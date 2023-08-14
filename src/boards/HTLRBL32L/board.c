@@ -20,7 +20,7 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
-#include "stm32l0xx.h"
+#include "bluenrg_lpx.h"
 #include "utilities.h"
 #include "gpio.h"
 #include "adc.h"

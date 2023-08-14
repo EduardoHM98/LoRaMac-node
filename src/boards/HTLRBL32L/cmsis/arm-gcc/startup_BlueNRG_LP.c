@@ -326,13 +326,13 @@ void setInterruptPriority(void)
   NVIC_SetPriority(GPIOA_IRQn,       IRQ_LOW_PRIORITY);
   NVIC_SetPriority(GPIOB_IRQn,       IRQ_LOW_PRIORITY);
   NVIC_SetPriority(DMA_IRQn,         IRQ_LOW_PRIORITY);
-  NVIC_SetPriority(BLE_TX_RX_IRQn,   IRQ_CRITICAL_PRIORITY);
+  NVIC_SetPriority(BLE_TX_RX_IRQn,   IRQ_VERY_HIGH_PRIORITY);
   NVIC_SetPriority(BLE_AES_IRQn,     IRQ_LOW_PRIORITY);
   NVIC_SetPriority(BLE_ERROR_IRQn,   IRQ_LOW_PRIORITY);
   NVIC_SetPriority(RADIO_CTRL_IRQn,  IRQ_LOW_PRIORITY);
   NVIC_SetPriority(MR_BLE_IRQn,      IRQ_LOW_PRIORITY);
   NVIC_SetPriority(CPU_WKUP_IRQn,    IRQ_HIGH_PRIORITY);
-  NVIC_SetPriority(BLE_WKUP_IRQn,    IRQ_CRITICAL_PRIORITY);
+  NVIC_SetPriority(BLE_WKUP_IRQn,    IRQ_VERY_HIGH_PRIORITY);
   NVIC_SetPriority(BLE_SEQ_IRQn,     IRQ_LOW_PRIORITY);
 #if defined(TIM16)
   NVIC_SetPriority(TIM16_IRQn,       IRQ_LOW_PRIORITY);

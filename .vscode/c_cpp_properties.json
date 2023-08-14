@@ -9,10 +9,17 @@
                     "${workspaceFolder}"
                 ]
             },
-            "compilerPath": "C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/12.2 mpacbti-rel1/arm-none-eabi-gcc.exe",
+            "compilerPath": "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin/arm-none-eabi-gcc.exe",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "includePath": [
+                "${workspaceFolder}/src/boards/HTLRBL32L/**",
+                "${workspaceFolder}/src/boards/",
+                "${workspaceFolder}/src/system/",
+                "${workspaceFolder}/src/radio/",
+                "${workspaceFolder}/src/peripherals/"
+            ]
         }
     ],
     "version": 4

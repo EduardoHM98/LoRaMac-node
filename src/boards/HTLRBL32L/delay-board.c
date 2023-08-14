@@ -22,7 +22,7 @@
  *
  * \author    Johannes Bruder ( STACKFORCE )
  */
-#include "stm32l0xx.h"
+#include "bluenrg_lpx.h"
 #include "delay-board.h"
 
 void DelayMsMcu( uint32_t ms )
