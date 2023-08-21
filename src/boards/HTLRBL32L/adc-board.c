@@ -21,6 +21,8 @@
  * \author    Gregory Cristian ( Semtech )
  */
 #include "bluenrg_lpx.h"
+#include "rf_driver_hal_adc.h"
+#include "rf_driver_hal_rcc.h"
 #include "board-config.h"
 #include "adc-board.h"
 
@@ -28,22 +30,23 @@ ADC_HandleTypeDef AdcHandle;
 
 void AdcMcuInit( Adc_t *obj, PinNames adcInput )
 {
-    AdcHandle.Instance = ADC1;
-
-    __HAL_RCC_ADC1_CLK_ENABLE( );
+/*     AdcHandle.Instance = ADC;
+    
+    __HAL_RCC_ADCDIG_CLK_ENABLE();
+    __HAL_RCC_ADCANA_CLK_ENABLE();
 
     HAL_ADC_DeInit( &AdcHandle );
 
     if( adcInput != NC )
     {
         GpioInit( &obj->AdcInput, adcInput, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    }
+    } */
 }
 
 void AdcMcuConfig( void )
 {
     // Configure ADC
-    AdcHandle.Init.OversamplingMode      = DISABLE;
+ /*    AdcHandle.Init.OversamplingMode      = DISABLE;
     AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
     AdcHandle.Init.Resolution            = ADC_RESOLUTION_12B;
     AdcHandle.Init.SamplingTime          = ADC_SAMPLETIME_160CYCLES_5;
@@ -59,12 +62,12 @@ void AdcMcuConfig( void )
     AdcHandle.Init.LowPowerAutoWait      = DISABLE;
     AdcHandle.Init.LowPowerFrequencyMode = ENABLE; // To be enabled only if ADC clock < 2.8 MHz
     AdcHandle.Init.LowPowerAutoPowerOff  = DISABLE;
-    HAL_ADC_Init( &AdcHandle );
+    HAL_ADC_Init( &AdcHandle ); */
 }
 
 uint16_t AdcMcuReadChannel( Adc_t *obj, uint32_t channel )
 {
-    ADC_ChannelConfTypeDef adcConf = { 0 };
+/*     ADC_ChannelConfTypeDef adcConf = { 0 };
     uint16_t adcData = 0;
 
     // Enable HSI
@@ -110,4 +113,4 @@ uint16_t AdcMcuReadChannel( Adc_t *obj, uint32_t channel )
     __HAL_RCC_HSI_DISABLE( );
 
     return adcData;
-}
+ */}

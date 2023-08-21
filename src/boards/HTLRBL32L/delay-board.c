@@ -24,6 +24,7 @@
  */
 #include "bluenrg_lpx.h"
 #include "delay-board.h"
+#include "rf_driver_hal.h"
 
 void DelayMsMcu( uint32_t ms )
 {

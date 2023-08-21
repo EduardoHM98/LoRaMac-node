@@ -19,8 +19,11 @@
  * \author    Miguel Luis ( Semtech )
  *
  * \author    Gregory Cristian ( Semtech )
+ * 
+ * \author    Christian Lehmen ( HT Micron )
  */
-#include "bluenrg_lpx.h"
+//#include "bluenrg_lpx.h"
+#include "rf_driver_hal.h"
 #include "utilities.h"
 #include "gpio.h"
 #include "adc.h"
@@ -32,7 +35,7 @@
 #include "board-config.h"
 #include "lpm-board.h"
 #include "rtc-board.h"
-#include "sx1276-board.h"
+#include "sx126x-board.h"
 #include "board.h"
 
 /*!
@@ -42,28 +45,15 @@
 #define         ID2                                 ( 0x1FF80054 )
 #define         ID3                                 ( 0x1FF80064 )
 
-/*!
- * LED GPIO pins objects
- */
-Gpio_t Led1;
-Gpio_t Led2;
-Gpio_t Led3;
-Gpio_t Led4;
-
 /*
  * MCU objects
  */
-Uart_t Uart2;
+Uart_t Uart1;
 
 /*!
  * Initializes the unused GPIO to a know status
  */
 static void BoardUnusedIoInit( void );
-
-/*!
- * System Clock Configuration
- */
-static void SystemClockConfig( void );
 
 /*!
  * System Clock Re-Configuration when waking up from STOP mode
@@ -83,11 +73,11 @@ static bool UsbIsConnected = false;
 /*!
  * UART2 FIFO buffers size
  */
-#define UART2_FIFO_TX_SIZE                                1024
-#define UART2_FIFO_RX_SIZE                                1024
+#define UART1_FIFO_TX_SIZE                                1024
+#define UART1_FIFO_RX_SIZE                                1024
 
-uint8_t Uart2TxBuffer[UART2_FIFO_TX_SIZE];
-uint8_t Uart2RxBuffer[UART2_FIFO_RX_SIZE];
+uint8_t Uart1TxBuffer[UART1_FIFO_TX_SIZE];
+uint8_t Uart1RxBuffer[UART1_FIFO_RX_SIZE];
 
 void BoardCriticalSectionBegin( uint32_t *mask )
 {
@@ -111,28 +101,17 @@ void BoardInitMcu( void )
     {
         HAL_Init( );
 
-        // LEDs
-        GpioInit( &Led1, LED_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-        GpioInit( &Led2, LED_2, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-        GpioInit( &Led3, LED_3, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-        GpioInit( &Led4, LED_4, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-
-        SystemClockConfig( );
+        //SystemClockConfig( ); initialization done on main
 
         UsbIsConnected = true;
 
-        FifoInit( &Uart2.FifoTx, Uart2TxBuffer, UART2_FIFO_TX_SIZE );
-        FifoInit( &Uart2.FifoRx, Uart2RxBuffer, UART2_FIFO_RX_SIZE );
+        FifoInit( &Uart1.FifoTx, Uart1TxBuffer, UART1_FIFO_TX_SIZE );
+        FifoInit( &Uart1.FifoRx, Uart1RxBuffer, UART1_FIFO_RX_SIZE );
         // Configure your terminal for 8 Bits data (7 data bit + 1 parity bit), no parity and no flow ctrl
-        UartInit( &Uart2, UART_2, UART_TX, UART_RX );
-        UartConfig( &Uart2, RX_TX, 921600, UART_8_BIT, UART_1_STOP_BIT, NO_PARITY, NO_FLOW_CTRL );
+        UartInit( &Uart1, UART_1, UART_TX, UART_RX );
+        UartConfig( &Uart1, RX_TX, 921600, UART_8_BIT, UART_1_STOP_BIT, NO_PARITY, NO_FLOW_CTRL );
 
         RtcInit( );
-
-        GpioWrite( &Led1, 0 );
-        GpioWrite( &Led2, 0 );
-        GpioWrite( &Led3, 0 );
-        GpioWrite( &Led4, 0 );
 
         BoardUnusedIoInit( );
         if( GetBoardPowerSource( ) == BATTERY_POWER )
@@ -146,14 +125,14 @@ void BoardInitMcu( void )
         SystemClockReConfig( );
     }
 
-    SpiInit( &SX1276.Spi, SPI_1, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC );
-    SX1276IoInit( );
+    SpiInit( &SX126x.Spi, SPI_1, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC );
+    SX126xIoInit( );
 
     if( McuInitialized == false )
     {
         McuInitialized = true;
-        SX1276IoDbgInit( );
-        SX1276IoTcxoInit( );
+        SX126xIoDbgInit( );
+      //  SX1276IoTcxoInit( );
     }
 }
 
@@ -167,7 +146,7 @@ void BoardResetMcu( void )
 
 void BoardDeInitMcu( void )
 {
-    SpiDeInit( &SX1276.Spi );
+    SpiDeInit( &SX126x.Spi );
     SX1276IoDeInit( );
 }
 
@@ -205,16 +184,18 @@ uint8_t BoardGetBatteryLevel( void )
 
 static void BoardUnusedIoInit( void )
 {
+    /*
     HAL_DBGMCU_EnableDBGSleepMode( );
     HAL_DBGMCU_EnableDBGStopMode( );
     HAL_DBGMCU_EnableDBGStandbyMode( );
+    */
 }
 
 void SystemClockConfig( void )
 {
-    RCC_OscInitTypeDef RCC_OscInitStruct;
+ /*   RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_ClkInitTypeDef RCC_ClkInitStruct;
-    RCC_PeriphCLKInitTypeDef PeriphClkInit;
+    RCC_PeriphCLKInitTypeDef PeriphClkInit;     
 
     __HAL_RCC_PWR_CLK_ENABLE( );
 
@@ -257,11 +238,12 @@ void SystemClockConfig( void )
 
     // SysTick_IRQn interrupt configuration
     HAL_NVIC_SetPriority( SysTick_IRQn, 0, 0 );
+    */
 }
 
 void SystemClockReConfig( void )
 {
-    __HAL_RCC_PWR_CLK_ENABLE( );
+ /*   __HAL_RCC_PWR_CLK_ENABLE( );
     __HAL_PWR_VOLTAGESCALING_CONFIG( PWR_REGULATOR_VOLTAGE_SCALE1 );
 
     // Enable HSI
@@ -287,6 +269,7 @@ void SystemClockReConfig( void )
     while( __HAL_RCC_GET_SYSCLK_SOURCE( ) != RCC_SYSCLKSOURCE_STATUS_PLLCLK )
     {
     }
+    */
 }
 
 void SysTick_Handler( void )
@@ -314,6 +297,7 @@ uint8_t GetBoardPowerSource( void )
   */
 void LpmEnterStopMode( void)
 {
+    /*
     CRITICAL_SECTION_BEGIN( );
 
     BoardDeInitMcu( );
@@ -334,6 +318,7 @@ void LpmEnterStopMode( void)
 
     // Enter Stop Mode
     HAL_PWR_EnterSTOPMode( PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI );
+    */
 }
 
 /*!
@@ -341,6 +326,7 @@ void LpmEnterStopMode( void)
  */
 void LpmExitStopMode( void )
 {
+    /*
     // Disable IRQ while the MCU is not running on HSI
     CRITICAL_SECTION_BEGIN( );
 
@@ -348,7 +334,9 @@ void LpmExitStopMode( void )
     BoardInitMcu( );
 
     CRITICAL_SECTION_END( );
+    */
 }
+
 
 /*!
  * \brief Enters Low Power Sleep Mode
@@ -357,20 +345,17 @@ void LpmExitStopMode( void )
  */
 void LpmEnterSleepMode( void)
 {
-    HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+ //   HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 }
 
 void BoardLowPowerHandler( void )
 {
-    __disable_irq( );
-    /*!
-     * If an interrupt has occurred after __disable_irq( ), it is kept pending 
-     * and cortex will not enter low power anyway
-     */
 
-    LpmEnterLowPower( );
+ /*    __disable_irq()
 
-    __enable_irq( );
+    LpmEnterLowPower();
+
+    __enable_irq(); */
 }
 
 #if !defined ( __CC_ARM )
@@ -380,7 +365,7 @@ void BoardLowPowerHandler( void )
  */
 int _write( int fd, const void *buf, size_t count )
 {
-    while( UartPutBuffer( &Uart2, ( uint8_t* )buf, ( uint16_t )count ) != 0 ){ };
+    while( UartPutBuffer( &Uart1, ( uint8_t* )buf, ( uint16_t )count ) != 0 ){ };
     return count;
 }
 
@@ -390,9 +375,9 @@ int _write( int fd, const void *buf, size_t count )
 int _read( int fd, const void *buf, size_t count )
 {
     size_t bytesRead = 0;
-    while( UartGetBuffer( &Uart2, ( uint8_t* )buf, count, ( uint16_t* )&bytesRead ) != 0 ){ };
+    while( UartGetBuffer( &Uart1, ( uint8_t* )buf, count, ( uint16_t* )&bytesRead ) != 0 ){ };
     // Echo back the character
-    while( UartPutBuffer( &Uart2, ( uint8_t* )buf, ( uint16_t )bytesRead ) != 0 ){ };
+    while( UartPutBuffer( &Uart1, ( uint8_t* )buf, ( uint16_t )bytesRead ) != 0 ){ };
     return bytesRead;
 }
 
@@ -403,16 +388,16 @@ int _read( int fd, const void *buf, size_t count )
 // Keil compiler
 int fputc( int c, FILE *stream )
 {
-    while( UartPutChar( &Uart2, ( uint8_t )c ) != 0 );
+    while( UartPutChar( &Uart1, ( uint8_t )c ) != 0 );
     return c;
 }
 
 int fgetc( FILE *stream )
 {
     uint8_t c = 0;
-    while( UartGetChar( &Uart2, &c ) != 0 );
+    while( UartGetChar( &Uart1, &c ) != 0 );
     // Echo back the character
-    while( UartPutChar( &Uart2, c ) != 0 );
+    while( UartPutChar( &Uart1, c ) != 0 );
     return ( int )c;
 }
 

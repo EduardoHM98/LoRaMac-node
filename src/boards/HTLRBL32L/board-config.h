@@ -94,14 +94,14 @@ extern "C"
 
 #define I2C_SCL                                     PB_8
 #define I2C_SDA                                     PB_9
-
-#define UART_TX                                     PA_2
-#define UART_RX                                     PA_3
+*/
+#define UART_TX                                     PA_9
+#define UART_RX                                     PA_8
 
 // Debug pins definition.
 #define RADIO_DBG_PIN_TX                            PB_13
 #define RADIO_DBG_PIN_RX                            PB_14
-*/
+
 #ifdef __cplusplus
 }
 #endif
