@@ -27,6 +27,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "rf_driver_hal_def.h"
+#include "rf_driver_hal_dma.h"
 
 /* Include low level driver */
 #include "rf_driver_ll_adc.h"

@@ -147,7 +147,7 @@ void BoardResetMcu( void )
 void BoardDeInitMcu( void )
 {
     SpiDeInit( &SX126x.Spi );
-    SX1276IoDeInit( );
+    SX126xIoDeInit( );
 }
 
 uint32_t BoardGetRandomSeed( void )

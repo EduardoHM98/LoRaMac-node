@@ -23,6 +23,7 @@
 #include "bluenrg_lpx.h"
 #include "utilities.h"
 #include "sysIrqHandlers.h"
+#include "rf_driver_hal_gpio.h"
 #include "board-config.h"
 #include "rtc-board.h"
 #include "gpio-board.h"
