@@ -53,12 +53,16 @@ void UartMcuInit( Uart_t *obj, UartId_t uartId, PinNames tx, PinNames rx )
     }
     else
     {
-        __HAL_RCC_USART2_FORCE_RESET( );
-        __HAL_RCC_USART2_RELEASE_RESET( );
-        __HAL_RCC_USART2_CLK_ENABLE( );
+        __HAL_RCC_USART1_FORCE_RESET( );
+        __HAL_RCC_USART1_RELEASE_RESET( );
+        __HAL_RCC_USART1_CLK_ENABLE( );
 
-        GpioInit( &obj->Tx, tx, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF4_USART2 );
-        GpioInit( &obj->Rx, rx, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF4_USART2 );
+        /**USART1 GPIO Configuration    
+		PA9/AF0     ------> USART1_TX
+		PA8/AF0     ------> USART1_RX
+		**/
+        GpioInit( &obj->Tx, tx, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF0_USART1 );
+        GpioInit( &obj->Rx, rx, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF0_USART1 );
     }
 }
 
@@ -72,7 +76,7 @@ void UartMcuConfig( Uart_t *obj, UartMode_t mode, uint32_t baudrate, WordLength_
     }
     else
     {
-        UartHandle.Instance = USART2;
+        UartHandle.Instance = USART1;
         UartHandle.Init.BaudRate = baudrate;
 
         if( mode == TX_ONLY )
@@ -164,8 +168,8 @@ void UartMcuConfig( Uart_t *obj, UartMode_t mode, uint32_t baudrate, WordLength_
             assert_param( LMN_STATUS_ERROR );
         }
 
-        HAL_NVIC_SetPriority( USART2_IRQn, 1, 0 );
-        HAL_NVIC_EnableIRQ( USART2_IRQn );
+        HAL_NVIC_SetPriority( USART1_IRQn, 1, 0 );
+        HAL_NVIC_EnableIRQ( USART1_IRQn );
 
         /* Enable the UART Data Register not empty Interrupt */
         HAL_UART_Receive_IT( &UartHandle, &RxData, 1 );
@@ -182,9 +186,9 @@ void UartMcuDeInit( Uart_t *obj )
     }
     else
     {
-        __HAL_RCC_USART2_FORCE_RESET( );
-        __HAL_RCC_USART2_RELEASE_RESET( );
-        __HAL_RCC_USART2_CLK_DISABLE( );
+        __HAL_RCC_USART1_FORCE_RESET( );
+        __HAL_RCC_USART1_RELEASE_RESET( );
+        __HAL_RCC_USART1_CLK_DISABLE( );
 
         GpioInit( &obj->Tx, obj->Tx.pin, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
         GpioInit( &obj->Rx, obj->Rx.pin, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
@@ -340,7 +344,7 @@ void HAL_UART_ErrorCallback( UART_HandleTypeDef *handle )
     HAL_UART_Receive_IT( &UartHandle, &RxData, 1 );
 }
 
-void USART2_IRQHandler( void )
+void USART1_IRQHandler( void )
 {
     HAL_UART_IRQHandler( &UartHandle );
 }
