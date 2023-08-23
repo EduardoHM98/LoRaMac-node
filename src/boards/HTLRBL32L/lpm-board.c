@@ -23,7 +23,7 @@
  * \author    MCD Application Team (C)( STMicroelectronics International )
  */
 #include <stdint.h>
-#include "stm32l0xx.h"
+#include "bluenrg_lpx.h"
 #include "utilities.h"
 #include "lpm-board.h"
 

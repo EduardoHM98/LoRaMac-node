@@ -24,7 +24,7 @@
  */
 #include <math.h>
 #include <time.h>
-#include "stm32l0xx.h"
+#include "bluenrg_lpx.h"
 #include "utilities.h"
 #include "delay.h"
 #include "board.h"
