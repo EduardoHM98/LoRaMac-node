@@ -25,9 +25,12 @@
 #include <math.h>
 #include <time.h>
 #include "bluenrg_lpx.h"
+<<<<<<< HEAD
 #include "rf_driver_hal_rtc.h"
 #include "rf_driver_hal_rcc.h"
 #include "rf_driver_hal_cortex.h"
+=======
+>>>>>>> uart
 #include "utilities.h"
 #include "delay.h"
 #include "board.h"

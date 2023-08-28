@@ -20,6 +20,10 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
+<<<<<<< HEAD
+=======
+#include "bluenrg_lpx.h"
+>>>>>>> uart
 #include "utilities.h"
 #include "board-config.h"
 #include "i2c-board.h"
