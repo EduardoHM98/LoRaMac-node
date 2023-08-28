@@ -23,7 +23,7 @@
  * \author    MCD Application Team (C)( STMicroelectronics International )
  */
 #include <stdint.h>
-#include "stm32l0xx.h"
+#include "bluenrg_lpx.h"
 #include "utilities.h"
 #include "lpm-board.h"
 
@@ -140,26 +140,26 @@ LpmGetMode_t LpmGetMode(void)
     return mode;
 }
 
-__weak void LpmEnterSleepMode( void )
+WEAK_FUNCTION (void LpmEnterSleepMode( void ))
 {
 }
 
-__weak void LpmExitSleepMode( void )
+WEAK_FUNCTION (void LpmExitSleepMode( void ))
 {
 }
 
-__weak void LpmEnterStopMode( void )
+WEAK_FUNCTION (void LpmEnterStopMode( void ))
 {
 }
 
-__weak void LpmExitStopMode( void )
+WEAK_FUNCTION (void LpmExitStopMode( void ))
 {
 }
 
-__weak void LpmEnterOffMode( void )
+WEAK_FUNCTION (void LpmEnterOffMode( void ))
 {
 }
 
-__weak void LpmExitOffMode( void )
+WEAK_FUNCTION (void LpmExitOffMode( void ))
 {
 }

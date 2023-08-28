@@ -191,9 +191,9 @@ static void BoardUnusedIoInit( void )
     */
 }
 
-void SystemClockConfig( void )
+ /*void SystemClockConfig( void )
 {
- /*   RCC_OscInitTypeDef RCC_OscInitStruct;
+   RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_ClkInitTypeDef RCC_ClkInitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInit;     
 
@@ -238,8 +238,8 @@ void SystemClockConfig( void )
 
     // SysTick_IRQn interrupt configuration
     HAL_NVIC_SetPriority( SysTick_IRQn, 0, 0 );
-    */
-}
+  
+}  */
 
 void SystemClockReConfig( void )
 {

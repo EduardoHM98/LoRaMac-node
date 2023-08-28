@@ -24,7 +24,10 @@
  */
 #include <math.h>
 #include <time.h>
-#include "stm32l0xx.h"
+#include "bluenrg_lpx.h"
+#include "rf_driver_hal_rtc.h"
+#include "rf_driver_hal_rcc.h"
+#include "rf_driver_hal_cortex.h"
 #include "utilities.h"
 #include "delay.h"
 #include "board.h"
@@ -110,6 +113,7 @@ static const uint8_t DaysInMonthLeapYear[] = { 31, 29, 31, 30, 31, 30, 31, 31, 3
  */
 static RTC_HandleTypeDef RtcHandle = 
 {
+
     .Instance = NULL,
     .Init = 
     { 
@@ -117,9 +121,7 @@ static RTC_HandleTypeDef RtcHandle =
         .AsynchPrediv = 0,
         .SynchPrediv = 0,
         .OutPut = 0,
-        .OutPutRemap = 0,
-        .OutPutPolarity = 0,
-        .OutPutType = 0
+        .OutPutPolarity = 0
     },
     .Lock = HAL_UNLOCKED,
     .State = HAL_RTC_STATE_RESET
@@ -153,7 +155,7 @@ void RtcInit( void )
 
     if( RtcInitialized == false )
     {
-        __HAL_RCC_RTC_ENABLE( );
+        __HAL_RCC_RTC_CLK_ENABLE( );
 
         RtcHandle.Instance            = RTC;
         RtcHandle.Init.HourFormat     = RTC_HOURFORMAT_24;
@@ -161,7 +163,6 @@ void RtcInit( void )
         RtcHandle.Init.SynchPrediv    = PREDIV_S;  // RTC_SYNCH_PREDIV;
         RtcHandle.Init.OutPut         = RTC_OUTPUT_DISABLE;
         RtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-        RtcHandle.Init.OutPutType     = RTC_OUTPUT_TYPE_OPENDRAIN;
         HAL_RTC_Init( &RtcHandle );
 
         date.Year                     = 0;
@@ -183,7 +184,7 @@ void RtcInit( void )
         // Enable Direct Read of the calendar registers (not through Shadow registers)
         HAL_RTCEx_EnableBypassShadow( &RtcHandle );
 
-        HAL_NVIC_SetPriority( RTC_IRQn, 1, 0 );
+        HAL_NVIC_SetPriority( RTC_IRQn, 0 );
         HAL_NVIC_EnableIRQ( RTC_IRQn );
 
         // Init alarm.
@@ -302,7 +303,7 @@ void RtcStopAlarm( void )
     __HAL_RTC_ALARM_CLEAR_FLAG( &RtcHandle, RTC_FLAG_ALRAF );
 
     // Clear the EXTI's line Flag for RTC Alarm
-    __HAL_RTC_ALARM_EXTI_CLEAR_FLAG( );
+    __HAL_RTC_ALARM_CLEAR_FLAG( &RtcHandle, RTC_FLAG_ALRAF);
 }
 
 void RtcStartAlarm( uint32_t timeout )

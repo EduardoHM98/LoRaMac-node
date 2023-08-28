@@ -25,6 +25,10 @@
 #include "board.h"
 #include "gpio.h"
 #include "spi-board.h"
+#include "rf_driver_hal_spi.h"
+#include "rf_driver_hal_rcc.h"
+#include "rf_driver_hal_gpio_ex.h"
+#include "system_BlueNRG_LP.h" //TODO only for static clk, rmv after changes
 
 static SPI_HandleTypeDef SpiHandle[2];
 
@@ -118,7 +122,7 @@ void SpiFormat( Spi_t *obj, int8_t bits, int8_t cpol, int8_t cpha, int8_t slave 
 void SpiFrequency( Spi_t *obj, uint32_t hz )
 {
     uint32_t divisor = 0;
-    uint32_t sysClkTmp = SystemCoreClock;
+    uint32_t sysClkTmp = SYSCLK_64M; //TODO change static value
     uint32_t baudRate;
 
     while( sysClkTmp > hz )

@@ -113,6 +113,9 @@
         "rtc-board.h": "c",
         "rf_driver_hal_def.h": "c",
         "bluenrg_lps.h": "c",
-        "rf_driver_ll_adc.h": "c"
+        "rf_driver_ll_adc.h": "c",
+        "i2c-board.h": "c",
+        "stdbool.h": "c",
+        "i2c.h": "c"
     }
 }
