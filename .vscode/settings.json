@@ -41,7 +41,7 @@
         // Select the active region for which the stack will be initialized.
         // You can choose between:
         // LORAMAC_REGION_EU868, LORAMAC_REGION_US915, ..
-        "ACTIVE_REGION":"LORAMAC_REGION_EU868",
+        "ACTIVE_REGION":"LORAMAC_REGION_US915",
 
         // Select the type of modulation, applicable to the ping-pong or
         // rx-sensi applications. You can choose between:
@@ -116,6 +116,10 @@
         "rf_driver_ll_adc.h": "c",
         "i2c-board.h": "c",
         "stdbool.h": "c",
-        "i2c.h": "c"
+        "i2c.h": "c",
+        "gpio-ioe.h": "c",
+        "rf_driver_hal_gpio.h": "c",
+        "cayennelpp.h": "c",
+        "rf_driver_ll_system.h": "c"
     }
 }

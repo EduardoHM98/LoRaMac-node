@@ -20,17 +20,21 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
-#include "bluenrg_lpx.h"
 #include "utilities.h"
 #include "sysIrqHandlers.h"
-#include "rf_driver_hal_gpio.h"
-#include "rf_driver_hal_gpio_ex.h"
 #include "board-config.h"
 #include "rtc-board.h"
 #include "gpio-board.h"
 #if defined( BOARD_IOE_EXT )
 #include "gpio-ioe.h"
 #endif
+
+#include "bluenrg_lpx.h"
+#include "rf_driver_hal_gpio.h"
+#include "rf_driver_hal_gpio_ex.h"
+#include "rf_driver_hal_exti.h"
+#include "rf_driver_hal_rcc.h"
+#include "rf_device_hal_conf.h"
 
 EXTI_HandleTypeDef HEXTI_InitStructure;
 static Gpio_t *GpioIrq[16];
@@ -172,13 +176,12 @@ void GpioMcuSetInterrupt( Gpio_t *obj, IrqModes irqMode, IrqPriorities irqPriori
             priority = 1;
             break;
         case IRQ_VERY_HIGH_PRIORITY:
-        default:
             priority = 0;
             break;
         }
 
-        if(obj->port = GPIOA) IRQnb = GPIOA_IRQn;
-        else if (obj->port = GPIOB) IRQnb = GPIOB_IRQn;
+        if(obj->port == GPIOA) IRQnb = GPIOA_IRQn;
+        else if (obj->port == GPIOB) IRQnb = GPIOB_IRQn;
 
         GpioIrq[( obj->pin ) & 0x0F] = obj;
 
@@ -298,7 +301,7 @@ void GPIOB_IRQHandler( void )
     }
 }
 
-void HAL_GPIO_EXTI_Callback( uint16_t gpioPin )
+void HAL_GPIO_EXTI_Callback(GPIO_TypeDef* GPIOx, uint16_t gpioPin ) //TODO
 {
     uint8_t callbackIndex = 0;
 
@@ -317,32 +320,3 @@ void HAL_GPIO_EXTI_Callback( uint16_t gpioPin )
     }
 }
 
-void IRQHandler_Config(void)
-{
-  GPIO_InitTypeDef   GPIO_InitStructure;
-  
-  EXTI_ConfigTypeDef EXTI_Config_InitStructure;
-  
-  /* Enable GPIOC clock */
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-
-  /* Configure PB.4 pin as input floating */
-  GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStructure.Pull = GPIO_NOPULL;
-  GPIO_InitStructure.Pin = GPIO_PIN_4;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-  EXTI_Config_InitStructure.Line =    EXTI_LINE_PB4;
-  EXTI_Config_InitStructure.Trigger = EXTI_TRIGGER_RISING_EDGE;
-  EXTI_Config_InitStructure.Type =    EXTI_TYPE_EDGE;
-   
-  HAL_EXTI_SetConfigLine(&HEXTI_InitStructure, &EXTI_Config_InitStructure);
-  HAL_EXTI_RegisterCallback(&HEXTI_InitStructure, HAL_EXTI_COMMON_CB_ID, (void(*) (uint32_t))RadioOnDioIrq);
-  HAL_EXTI_Cmd(&HEXTI_InitStructure , ENABLE);
-  
-  HAL_EXTI_ClearPending(&HEXTI_InitStructure);
-  
-  /* Enable and set line 10 Interrupt to the lowest priority */
-  HAL_NVIC_SetPriority(GPIOB_IRQn,2);
-  HAL_NVIC_EnableIRQ(GPIOB_IRQn);
-}

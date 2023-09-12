@@ -97,6 +97,11 @@ void BoardInitPeriph( void )
 
 void BoardInitMcu( void )
 {
+    if (SystemInit(SYSCLK_64M, BLE_SYSCLK_NONE) != SUCCESS) {
+		/* Error during system clock configuration take appropriate action */
+		while(1);
+	}
+    
     if( McuInitialized == false )
     {
         HAL_Init( );

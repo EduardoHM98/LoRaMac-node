@@ -27,6 +27,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "rf_driver_hal_def.h"
+#include "rf_driver_hal_dma.h"
 
 /** @addtogroup RF_DRIVER_HAL_Driver
   * @{

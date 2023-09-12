@@ -28,6 +28,10 @@
 #include "sysIrqHandlers.h"
 #include "uart-board.h"
 #include "rf_driver_hal_uart.h"
+#include "rf_driver_hal_cortex.h"
+#include "rf_driver_hal_rcc.h"
+#include "rf_driver_hal_gpio.h"
+#include "rf_device_hal_conf.h"
 
 /*!
  * Number of times the UartPutBuffer will try to send the buffer before
@@ -53,9 +57,9 @@ void UartMcuInit( Uart_t *obj, UartId_t uartId, PinNames tx, PinNames rx )
     }
     else
     {
-        __HAL_RCC_USART1_FORCE_RESET( );
-        __HAL_RCC_USART1_RELEASE_RESET( );
-        __HAL_RCC_USART1_CLK_ENABLE( );
+        __HAL_RCC_USART_FORCE_RESET( );
+        __HAL_RCC_USART_RELEASE_RESET( );
+        __HAL_RCC_USART_CLK_ENABLE( );
 
         /**USART1 GPIO Configuration    
 		PA9/AF0     ------> USART1_TX
@@ -168,7 +172,7 @@ void UartMcuConfig( Uart_t *obj, UartMode_t mode, uint32_t baudrate, WordLength_
             assert_param( LMN_STATUS_ERROR );
         }
 
-        HAL_NVIC_SetPriority( USART1_IRQn, 1, 0 );
+        HAL_NVIC_SetPriority( USART1_IRQn, 0 );
         HAL_NVIC_EnableIRQ( USART1_IRQn );
 
         /* Enable the UART Data Register not empty Interrupt */
@@ -186,9 +190,9 @@ void UartMcuDeInit( Uart_t *obj )
     }
     else
     {
-        __HAL_RCC_USART1_FORCE_RESET( );
-        __HAL_RCC_USART1_RELEASE_RESET( );
-        __HAL_RCC_USART1_CLK_DISABLE( );
+        __HAL_RCC_USART_FORCE_RESET( );
+        __HAL_RCC_USART_RELEASE_RESET( );
+        __HAL_RCC_USART_CLK_DISABLE( );
 
         GpioInit( &obj->Tx, obj->Tx.pin, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
         GpioInit( &obj->Rx, obj->Rx.pin, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );

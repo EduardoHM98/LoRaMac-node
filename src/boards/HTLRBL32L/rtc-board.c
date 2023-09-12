@@ -25,12 +25,9 @@
 #include <math.h>
 #include <time.h>
 #include "bluenrg_lpx.h"
-<<<<<<< HEAD
 #include "rf_driver_hal_rtc.h"
 #include "rf_driver_hal_rcc.h"
 #include "rf_driver_hal_cortex.h"
-=======
->>>>>>> uart
 #include "utilities.h"
 #include "delay.h"
 #include "board.h"
@@ -493,10 +490,10 @@ void RTC_IRQHandler( void )
     RTC_HandleTypeDef* hrtc = &RtcHandle;
 
     // Enable low power at irq
-    LpmSetStopMode( LPM_RTC_ID, LPM_ENABLE );
+  //  LpmSetStopMode( LPM_RTC_ID, LPM_ENABLE );
 
     // Clear the EXTI's line Flag for RTC Alarm
-    __HAL_RTC_ALARM_EXTI_CLEAR_FLAG( );
+   // __HAL_RTC_ALARM_EXTI_CLEAR_FLAG( );
 
     // Gets the AlarmA interrupt source enable status
     if( __HAL_RTC_ALARM_GET_IT_SOURCE( hrtc, RTC_IT_ALRA ) != RESET )

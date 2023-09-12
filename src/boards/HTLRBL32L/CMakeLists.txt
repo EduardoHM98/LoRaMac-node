@@ -36,34 +36,31 @@ list(APPEND ${PROJECT_NAME}_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/sx1262mbxdas-board.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/sysIrqHandlers.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/uart-board.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/syscalls.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/utilities.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmsis/arm-gcc/startup_BlueNRG_LP.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmsis/system_BlueNRG_LP.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_adc.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_adc_ex.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_cortex.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_dma.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_flash.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_flash_ex.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_gpio.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_i2c.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_i2c_ex.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_pwr.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_pwr_ex.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_rcc.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_rcc_ex.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_rtc.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_rtc_ex.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_spi.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_uart.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_uart_ex.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_exti.c"
 )
 
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC -DUSE_HAL_DRIVER  -DCONFIG_HW_HSE_TUNE=32 -DCONFIG_HW_SMPS_10uH -DCONFIG_HW_LS_RO -DCONFIG_DEVICE_BLUENRG_LP)
-
 # Add define if debbuger support is enabled
 target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<BOOL:${USE_DEBUGGER}>:USE_DEBUGGER>)
 

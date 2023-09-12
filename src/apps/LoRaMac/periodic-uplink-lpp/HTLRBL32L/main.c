@@ -33,7 +33,6 @@
 #include "RegionCommon.h"
 
 //added
-#include "rf_driver_hal.h"
 #include "system_util.h"
 
 #include "cli.h"
@@ -143,25 +142,7 @@ static bool AppLedStateOn = false;
  */
 static TimerEvent_t TxTimer;
 
-/*!
- * Timer to handle the state of LED1
- */
-static TimerEvent_t Led1Timer;
-
-/*!
- * Timer to handle the state of LED2
- */
-static TimerEvent_t Led2Timer;
-
-/*!
- * Timer to handle the state of LED3
- */
-static TimerEvent_t Led3Timer;
-
-/*!
- * Timer to handle the state of LED beacon indicator
- */
-static TimerEvent_t LedBeaconTimer;
+static void OnTxTimerEvent( void* context );
 
 static void OnMacProcessNotify( void );
 static void OnNvmDataChange( LmHandlerNvmContextStates_t state, uint16_t size );
@@ -245,33 +226,15 @@ static volatile uint32_t TxPeriodicity = 0;
 /*!
  * UART object used for command line interface handling
  */
-extern Uart_t Uart2;
+extern Uart_t Uart1;
 
 /*!
  * Main application entry point.
  */
 int main( void )
 {
-
-    if (SystemInit(SYSCLK_64M, BLE_SYSCLK_NONE) != SUCCESS) {
-		/* Error during system clock configuration take appropriate action */
-		while(1);
-	}
-
     BoardInitMcu( );
     BoardInitPeriph( );
-
-    TimerInit( &Led1Timer, OnLed1TimerEvent );
-    TimerSetValue( &Led1Timer, 25 );
-
-    TimerInit( &Led2Timer, OnLed2TimerEvent );
-    TimerSetValue( &Led2Timer, 25 );
-
-    TimerInit( &Led3Timer, OnLed3TimerEvent );
-    TimerSetValue( &Led3Timer, 25 );
-
-    TimerInit( &LedBeaconTimer, OnLedBeaconTimerEvent );
-    TimerSetValue( &LedBeaconTimer, 5000 );
 
     // Initialize transmission periodicity variable
     TxPeriodicity = APP_TX_DUTYCYCLE + randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
@@ -305,7 +268,7 @@ int main( void )
     while( 1 )
     {
         // Process characters sent over the command line interface
-        CliProcess( &Uart2 );
+        CliProcess( &Uart1 );
 
         // Processes the LoRaMac events
         LmHandlerProcess( );
@@ -377,20 +340,16 @@ static void OnRxData( LmHandlerAppData_t* appData, LmHandlerRxParams_t* params )
 
     switch( appData->Port )
     {
-    case 1: // The application LED can be controlled on port 1 or 2
+    case 1: 
     case LORAWAN_APP_PORT:
         {
-            AppLedStateOn = appData->Buffer[0] & 0x01;
-            GpioWrite( &Led4, ( ( AppLedStateOn & 0x01 ) != 0 ) ? 1 : 0 );
+
         }
         break;
     default:
         break;
     }
 
-    // Switch LED 2 ON for each received downlink
-    GpioWrite( &Led3, 1 );
-    TimerStart( &Led3Timer );
 }
 
 static void OnClassChange( DeviceClass_t deviceClass )
@@ -413,13 +372,11 @@ static void OnBeaconStatusChange( LoRaMacHandlerBeaconParams_t* params )
     {
         case LORAMAC_HANDLER_BEACON_RX:
         {
-            TimerStart( &LedBeaconTimer );
             break;
         }
         case LORAMAC_HANDLER_BEACON_LOST:
         case LORAMAC_HANDLER_BEACON_NRX:
         {
-            TimerStop( &LedBeaconTimer );
             break;
         }
         default:
@@ -466,9 +423,7 @@ static void PrepareTxFrame( void )
 
     if( LmHandlerSend( &AppData, LmHandlerParams.IsTxConfirmed ) == LORAMAC_HANDLER_SUCCESS )
     {
-        // Switch LED 1 ON
-        GpioWrite( &Led1, 1 );
-        TimerStart( &Led1Timer );
+
     }
 }
 
@@ -545,43 +500,3 @@ static void OnTxTimerEvent( void* context )
     TimerStart( &TxTimer );
 }
 
-/*!
- * Function executed on Led 1 Timeout event
- */
-static void OnLed1TimerEvent( void* context )
-{
-    TimerStop( &Led1Timer );
-    // Switch LED 1 OFF
-    GpioWrite( &Led1, 0 );
-}
-
-/*!
- * Function executed on Led 2 Timeout event
- */
-static void OnLed2TimerEvent( void* context )
-{
-    TimerStop( &Led2Timer );
-    // Switch LED 2 OFF
-    GpioWrite( &Led2, 0 );
-}
-
-/*!
- * \brief Function executed on Led 3 Timeout event
- */
-static void OnLed3TimerEvent( void* context )
-{
-    TimerStop( &Led3Timer );
-    // Switch LED 3 OFF
-    GpioWrite( &Led3, 0 );
-}
-
-/*!
- * \brief Function executed on Beacon timer Timeout event
- */
-static void OnLedBeaconTimerEvent( void* context )
-{
-    GpioWrite( &Led2, 1 );
-    TimerStart( &Led2Timer );
-
-    TimerStart( &LedBeaconTimer );
-}

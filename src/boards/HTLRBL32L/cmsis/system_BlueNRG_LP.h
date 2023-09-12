@@ -334,13 +334,13 @@ extern RAM_VR_TypeDef RAM_VR;               /*!< Virtual Register map in RAM  */
   * @{
   */
 
-//#define IRQ_CRITICAL_PRIORITY   0
+#define IRQ_BLUENRG_CRITICAL_PRIORITY   0
    
-//#define IRQ_HIGH_PRIORITY       1
+#define IRQ_BLUENRG_HIGH_PRIORITY       1
    
-//#define IRQ_MED_PRIORITY        2
+#define IRQ_BLUENRG_MED_PRIORITY        2
    
-//#define IRQ_LOW_PRIORITY        3
+#define IRQ_BLUENRG_LOW_PRIORITY        3
 
 /**
   * @}

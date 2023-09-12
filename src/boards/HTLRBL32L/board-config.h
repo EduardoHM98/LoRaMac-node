@@ -64,6 +64,14 @@ extern "C"
 //#define RADIO_DIO_5                                 PA_4
 
 #define RADIO_SWITCH_ENABLE                         PB_0
+
+#define RADIO_BUSY                                  PB_3
+
+#define RADIO_ANT_SWITCH_POWER                      PA_9
+#define RADIO_FREQ_SEL                              PA_1
+#define RADIO_XTAL_SEL                              PB_0
+#define RADIO_DEVICE_SEL                            PA_4
+
 /*
 #define RADIO_TCXO_POWER                            PA_12
 

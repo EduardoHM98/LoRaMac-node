@@ -20,10 +20,6 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
-<<<<<<< HEAD
-=======
-#include "bluenrg_lpx.h"
->>>>>>> uart
 #include "utilities.h"
 #include "board-config.h"
 #include "i2c-board.h"
@@ -31,6 +27,7 @@
 #include "rf_driver_hal_i2c.h"
 #include "rf_driver_hal_rcc.h"
 #include "rf_driver_hal_gpio_ex.h"
+
 
 /*!
  *  The value of the maximal timeout for I2C waiting loops
