@@ -3735,12 +3735,10 @@ static uint8_t IsRequestPending( void )
     return 0;
 }
 
-
 LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacCallback_t* callbacks, LoRaMacRegion_t region )
 {
     GetPhyParams_t getPhy;
     PhyParam_t phyParam;
-
     if( ( primitives == NULL ) ||
         ( callbacks == NULL ) )
     {
@@ -3766,7 +3764,7 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
     // Initialize the module context with zeros
     memset1( ( uint8_t* ) &Nvm, 0x00, sizeof( LoRaMacNvmData_t ) );
     memset1( ( uint8_t* ) &MacCtx, 0x00, sizeof( LoRaMacCtx_t ) );
-
+    
     // Set non zero variables to its default value
     Nvm.MacGroup2.Region = region;
     Nvm.MacGroup2.DeviceClass = CLASS_A;

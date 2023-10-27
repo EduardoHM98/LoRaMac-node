@@ -45,8 +45,30 @@ uint8_t TxData = 0;
 
 extern Uart_t Uart1;
 
+
 void UartMcuInit( Uart_t *obj, UartId_t uartId, PinNames tx, PinNames rx )
 {
+    GPIO_InitTypeDef GPIO_InitStruct;
+  if(UartHandle.Instance==USART1)
+  {
+
+    /* Peripheral clock enable */
+    __HAL_RCC_USART_CLK_ENABLE();
+
+  
+    /**USART1 GPIO Configuration    
+    PA9/AF0     ------> USART1_TX
+    PA8/AF0     ------> USART1_RX 
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_8;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF0_USART1;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  }
+    /*
     obj->UartId = uartId;
 
     if( uartId == UART_USB_CDC )
@@ -61,15 +83,19 @@ void UartMcuInit( Uart_t *obj, UartId_t uartId, PinNames tx, PinNames rx )
         __HAL_RCC_USART_RELEASE_RESET( );
         __HAL_RCC_USART_CLK_ENABLE( );
 
-        /**USART1 GPIO Configuration    
-		PA9/AF0     ------> USART1_TX
-		PA8/AF0     ------> USART1_RX
-		**/
+        //USART1 GPIO Configuration    
+		//PA9/AF0     ------> USART1_TX
+		//PA8/AF0     ------> USART1_RX
+		
         GpioInit( &obj->Tx, tx, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF0_USART1 );
         GpioInit( &obj->Rx, rx, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF0_USART1 );
     }
+    */
 }
+  
 
+#define ALTERNATIVE_UART
+#ifndef ALTERNATIVE_UART
 void UartMcuConfig( Uart_t *obj, UartMode_t mode, uint32_t baudrate, WordLength_t wordLength, StopBits_t stopBits, Parity_t parity, FlowCtrl_t flowCtrl )
 {
     if( obj->UartId == UART_USB_CDC )
@@ -171,15 +197,50 @@ void UartMcuConfig( Uart_t *obj, UartMode_t mode, uint32_t baudrate, WordLength_
         {
             assert_param( LMN_STATUS_ERROR );
         }
-
+        
         HAL_NVIC_SetPriority( USART1_IRQn, 0 );
         HAL_NVIC_EnableIRQ( USART1_IRQn );
+
+
 
         /* Enable the UART Data Register not empty Interrupt */
         HAL_UART_Receive_IT( &UartHandle, &RxData, 1 );
     }
 }
+#else
+void MX_USART1_UART_Init(void){
+  UartHandle.Instance = USART1;
+  UartHandle.Init.BaudRate = 115200U;
+  UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
+  UartHandle.Init.StopBits = UART_STOPBITS_1;
+  UartHandle.Init.Parity = UART_PARITY_NONE;
+  UartHandle.Init.Mode = UART_MODE_TX_RX;
+  UartHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
+  UartHandle.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  UartHandle.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  UartHandle.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&UartHandle) != HAL_OK)
+  {
+		printf("Error HAL_UART_Init\n");
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&UartHandle, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+		printf("Error HAL_UARTEx_SetTxFifoThreshold\n");
 
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&UartHandle, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+		printf("Error HAL_UARTEx_SetRxFifoThreshold\n");
+
+  }
+  if (HAL_UARTEx_DisableFifoMode(&UartHandle) != HAL_OK)
+  {
+		printf("Error HAL_UARTEx_DisableFifoMode\n");
+
+  }
+}
+#endif
 void UartMcuDeInit( Uart_t *obj )
 {
     if( obj->UartId == UART_USB_CDC )
@@ -318,7 +379,9 @@ void HAL_UART_TxCpltCallback( UART_HandleTypeDef *handle )
     {
         TxData = FifoPop( &Uart1.FifoTx );
         //  Write one byte to the transmit data register
-        HAL_UART_Transmit_IT( &UartHandle, &TxData, 1 );
+        if(HAL_UART_Transmit_IT( &UartHandle, &TxData, 1 ) != HAL_OK){
+            printf("error\n");
+        }
     }
 
     if( Uart1.IrqNotify != NULL )

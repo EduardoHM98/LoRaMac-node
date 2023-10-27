@@ -239,11 +239,11 @@ static void LmHandlerPackagesNotify( PackageNotifyTypes_t notifyType, void *para
 static bool LmHandlerPackageIsTxPending( void );
 
 static void LmHandlerPackagesProcess( void );
-
+#include <stdio.h>
 LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
                                       LmHandlerParams_t *handlerParams )
 {
-    //
+
     uint16_t nbNvmData = 0;
     MibRequestConfirm_t mibReq;
     LmHandlerParams = handlerParams;
@@ -261,9 +261,10 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
     IsClassBSwitchPending = false;
     IsUplinkTxPending = false;
 
+
     if( LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks, LmHandlerParams->Region ) != LORAMAC_STATUS_OK )
     {
-        return LORAMAC_HANDLER_ERROR;
+       return LORAMAC_HANDLER_ERROR;
     }
 
     // Restore data if required
@@ -350,7 +351,6 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
     }
     return LORAMAC_HANDLER_SUCCESS;
 }
-
 bool LmHandlerIsBusy( void )
 {
     if( LoRaMacIsBusy( ) == true )

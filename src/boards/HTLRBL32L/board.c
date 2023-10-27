@@ -94,7 +94,6 @@ void BoardInitPeriph( void )
 {
 
 }
-
 void BoardInitMcu( void )
 {
     if (SystemInit(SYSCLK_64M, BLE_SYSCLK_NONE) != SUCCESS) {
@@ -106,19 +105,19 @@ void BoardInitMcu( void )
     {
         HAL_Init( );
 
-        //SystemClockConfig( ); initialization done on main
+        //SystemClockConfig( );
 
         UsbIsConnected = true;
 
-        FifoInit( &Uart1.FifoTx, Uart1TxBuffer, UART1_FIFO_TX_SIZE );
-        FifoInit( &Uart1.FifoRx, Uart1RxBuffer, UART1_FIFO_RX_SIZE );
+        //FifoInit( &Uart1.FifoTx, Uart1TxBuffer, UART1_FIFO_TX_SIZE );
+        //FifoInit( &Uart1.FifoRx, Uart1RxBuffer, UART1_FIFO_RX_SIZE );
         // Configure your terminal for 8 Bits data (7 data bit + 1 parity bit), no parity and no flow ctrl
-        UartInit( &Uart1, UART_1, UART_TX, UART_RX );
-        UartConfig( &Uart1, RX_TX, 921600, UART_8_BIT, UART_1_STOP_BIT, NO_PARITY, NO_FLOW_CTRL );
+        //UartInit( &Uart1, UART_1, UART_TX, UART_RX );
+        //UartConfig( &Uart1, RX_TX, 115200, UART_8_BIT, UART_1_STOP_BIT, NO_PARITY, NO_FLOW_CTRL );
+        MX_USART1_UART_Init();
+        //RtcInit( );
 
-        RtcInit( );
-
-        BoardUnusedIoInit( );
+        //BoardUnusedIoInit( );
         if( GetBoardPowerSource( ) == BATTERY_POWER )
         {
             // Disables OFF mode - Enables lowest power mode (STOP)
@@ -130,8 +129,8 @@ void BoardInitMcu( void )
         SystemClockReConfig( );
     }
 
-    SpiInit( &SX126x.Spi, SPI_1, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC );
-    SX126xIoInit( );
+    //SpiInit( &SX126x.Spi, SPI_1, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC );
+   // SX126xIoInit( );
 
     if( McuInitialized == false )
     {
@@ -195,9 +194,11 @@ static void BoardUnusedIoInit( void )
     HAL_DBGMCU_EnableDBGStandbyMode( );
     */
 }
-
- /*void SystemClockConfig( void )
+/*
+ void SystemClockConfig( void )
 {
+    
+    
    RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_ClkInitTypeDef RCC_ClkInitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInit;     
@@ -244,7 +245,7 @@ static void BoardUnusedIoInit( void )
     // SysTick_IRQn interrupt configuration
     HAL_NVIC_SetPriority( SysTick_IRQn, 0, 0 );
   
-}  */
+} */ 
 
 void SystemClockReConfig( void )
 {
@@ -277,8 +278,8 @@ void SystemClockReConfig( void )
     */
 }
 
-void SysTick_Handler( void )
-{
+void SysTick_IRQHandler( void )
+{    
     HAL_IncTick( );
     HAL_SYSTICK_IRQHandler( );
 }
@@ -368,11 +369,28 @@ void BoardLowPowerHandler( void )
 /*
  * Function to be used by stdout for printf etc
  */
-int _write( int fd, const void *buf, size_t count )
+
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif
+PUTCHAR_PROTOTYPE{
+  /* Place your implementation of fputc here */
+  /* e.g. write a character to the USART1 and Loop until the end of transmission */
+  HAL_UART_Transmit(&Uart1, (uint8_t *)&ch, 1, 0xFFFF);
+
+  return ch;
+}
+
+#if !defined ( __CC_ARM )
+
+
+/*int _write( int fd, const void *buf, size_t count )
 {
+
     while( UartPutBuffer( &Uart1, ( uint8_t* )buf, ( uint16_t )count ) != 0 ){ };
     return count;
-}
+}*/
 
 /*
  * Function to be used by stdin for scanf etc

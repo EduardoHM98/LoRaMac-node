@@ -76,8 +76,8 @@ void delay_us(const uint16_t us)
 /**
  * \brief Perform delay in ms
  */
-void delay_ms(const uint16_t ms)
 {
+void delay_ms(const uint16_t ms)
 	_delay_cycles(hardware, _get_cycles_for_ms(ms));
 }
 

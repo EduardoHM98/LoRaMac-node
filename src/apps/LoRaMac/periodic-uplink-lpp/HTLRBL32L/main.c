@@ -234,7 +234,6 @@ extern Uart_t Uart1;
 int main( void )
 {
     BoardInitMcu( );
-    BoardInitPeriph( );
 
     // Initialize transmission periodicity variable
     TxPeriodicity = APP_TX_DUTYCYCLE + randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
@@ -245,28 +244,37 @@ int main( void )
                     &appVersion,
                     &gitHubVersion );
 
-    if ( LmHandlerInit( &LmHandlerCallbacks, &LmHandlerParams ) != LORAMAC_HANDLER_SUCCESS )
+    printf("preparing frame00\n");
+
+    while(1);
+    /*if ( LmHandlerInit( &LmHandlerCallbacks, &LmHandlerParams ) != LORAMAC_HANDLER_SUCCESS )
     {
         printf( "LoRaMac wasn't properly initialized\n" );
         // Fatal error, endless loop.
         while ( 1 )
         {
         }
-    }
+    }*/
+        printf("preparing frame5\n");
 
     // Set system maximum tolerated rx error in milliseconds
     LmHandlerSetSystemMaxRxError( 20 );
+        printf("preparing frame0\n");
 
     // The LoRa-Alliance Compliance protocol package should always be
     // initialized and activated.
     LmHandlerPackageRegister( PACKAGE_ID_COMPLIANCE, &LmhpComplianceParams );
+        printf("preparing frame1\n");
 
     LmHandlerJoin( );
+        printf("preparing frame2\n");
 
     StartTxProcess( LORAMAC_HANDLER_TX_ON_TIMER );
+        printf("preparing frame3\n");
 
     while( 1 )
     {
+
         // Process characters sent over the command line interface
         CliProcess( &Uart1 );
 
@@ -450,6 +458,8 @@ static void StartTxProcess( LmHandlerTxEvents_t txEvent )
 
 static void UplinkProcess( void )
 {
+    printf("preparing frame\n");
+
     uint8_t isPending = 0;
     CRITICAL_SECTION_BEGIN( );
     isPending = IsTxFramePending;
@@ -457,6 +467,7 @@ static void UplinkProcess( void )
     CRITICAL_SECTION_END( );
     if( isPending == 1 )
     {
+        printf("preparing frame\n");
         PrepareTxFrame( );
     }
 }
@@ -494,7 +505,6 @@ static void OnTxTimerEvent( void* context )
     TimerStop( &TxTimer );
 
     IsTxFramePending = 1;
-
     // Schedule next transmission
     TimerSetValue( &TxTimer, TxPeriodicity );
     TimerStart( &TxTimer );
