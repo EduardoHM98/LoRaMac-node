@@ -126,7 +126,9 @@
             "cayennelpp.h": "c",
             "rf_driver_ll_system.h": "c",
             "type_traits": "c",
-            "stdio.h": "c"
+            "stdio.h": "c",
+            "rf_driver_hal_uart.h": "c",
+            "stdint.h": "c"
         },
         "cortex-debug.variableUseNaturalFormat": true
     }

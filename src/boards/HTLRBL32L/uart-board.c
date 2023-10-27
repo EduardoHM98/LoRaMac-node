@@ -32,6 +32,8 @@
 #include "rf_driver_hal_rcc.h"
 #include "rf_driver_hal_gpio.h"
 #include "rf_device_hal_conf.h"
+#include <stdio.h>
+
 
 /*!
  * Number of times the UartPutBuffer will try to send the buffer before
@@ -46,10 +48,27 @@ uint8_t TxData = 0;
 extern Uart_t Uart1;
 
 
-void UartMcuInit( Uart_t *obj, UartId_t uartId, PinNames tx, PinNames rx )
+#ifdef __GNUC__
+/* With GCC, small printf (option LD Linker->Libraries->Small printf
+   set to 'Yes') calls __io_putchar() */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
+
+PUTCHAR_PROTOTYPE{
+  /* Place your implementation of fputc here */
+  /* e.g. write a character to the USART1 and Loop until the end of transmission */
+  HAL_UART_Transmit(&UartHandle, (uint8_t *)&ch, 1, 0xFFFF);
+
+  return ch;
+}
+
+
+void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 {
-    GPIO_InitTypeDef GPIO_InitStruct;
-  if(UartHandle.Instance==USART1)
+  GPIO_InitTypeDef GPIO_InitStruct;
+  if(huart->Instance==USART1)
   {
 
     /* Peripheral clock enable */
@@ -67,8 +86,14 @@ void UartMcuInit( Uart_t *obj, UartId_t uartId, PinNames tx, PinNames rx )
     GPIO_InitStruct.Alternate = GPIO_AF0_USART1;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+
   }
-    /*
+
+}
+
+
+void UartMcuInit( Uart_t *obj, UartId_t uartId, PinNames tx, PinNames rx )
+{
     obj->UartId = uartId;
 
     if( uartId == UART_USB_CDC )
@@ -90,7 +115,7 @@ void UartMcuInit( Uart_t *obj, UartId_t uartId, PinNames tx, PinNames rx )
         GpioInit( &obj->Tx, tx, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF0_USART1 );
         GpioInit( &obj->Rx, rx, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF0_USART1 );
     }
-    */
+    
 }
   
 
@@ -209,6 +234,7 @@ void UartMcuConfig( Uart_t *obj, UartMode_t mode, uint32_t baudrate, WordLength_
 }
 #else
 void MX_USART1_UART_Init(void){
+    
   UartHandle.Instance = USART1;
   UartHandle.Init.BaudRate = 115200U;
   UartHandle.Init.WordLength = UART_WORDLENGTH_8B;

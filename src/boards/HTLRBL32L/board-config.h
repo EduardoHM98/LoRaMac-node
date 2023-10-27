@@ -65,7 +65,7 @@ extern "C"
 
 #define RADIO_SWITCH_ENABLE                         PB_0
 
-#define RADIO_BUSY                                  PB_3
+#define RADIO_BUSY                                  PB_15
 
 #define RADIO_ANT_SWITCH_POWER                      PA_9
 #define RADIO_FREQ_SEL                              PA_1

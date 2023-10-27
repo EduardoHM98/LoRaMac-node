@@ -47,7 +47,7 @@
 #include "radio.h"
 
 #include "LoRaMac.h"
-
+#include <stdio.h>
 /*!
  * Maximum PHY layer payload size
  */
@@ -3929,7 +3929,6 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
 
     // Random seed initialization
     srand1( Radio.Random( ) );
-
     Radio.SetPublicNetwork( Nvm.MacGroup2.PublicNetwork );
     Radio.Sleep( );
 

@@ -115,9 +115,9 @@ void BoardInitMcu( void )
         //UartInit( &Uart1, UART_1, UART_TX, UART_RX );
         //UartConfig( &Uart1, RX_TX, 115200, UART_8_BIT, UART_1_STOP_BIT, NO_PARITY, NO_FLOW_CTRL );
         MX_USART1_UART_Init();
-        //RtcInit( );
+        RtcInit( );
 
-        //BoardUnusedIoInit( );
+        BoardUnusedIoInit( );
         if( GetBoardPowerSource( ) == BATTERY_POWER )
         {
             // Disables OFF mode - Enables lowest power mode (STOP)
@@ -129,8 +129,8 @@ void BoardInitMcu( void )
         SystemClockReConfig( );
     }
 
-    //SpiInit( &SX126x.Spi, SPI_1, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC );
-   // SX126xIoInit( );
+    SpiInit( &SX126x.Spi, SPI_1, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC );
+    SX126xIoInit( );
 
     if( McuInitialized == false )
     {
@@ -364,23 +364,6 @@ void BoardLowPowerHandler( void )
     __enable_irq(); */
 }
 
-#if !defined ( __CC_ARM )
-
-/*
- * Function to be used by stdout for printf etc
- */
-
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif
-PUTCHAR_PROTOTYPE{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART1 and Loop until the end of transmission */
-  HAL_UART_Transmit(&Uart1, (uint8_t *)&ch, 1, 0xFFFF);
-
-  return ch;
-}
 
 #if !defined ( __CC_ARM )
 

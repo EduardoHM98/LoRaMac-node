@@ -36,7 +36,7 @@
 #include "LmhpClockSync.h"
 #include "LmhpRemoteMcastSetup.h"
 #include "LmhpFragmentation.h"
-
+#include <stdio.h>
 #include "LoRaMacTest.h"
 
 static CommissioningParams_t CommissioningParams =
@@ -239,7 +239,7 @@ static void LmHandlerPackagesNotify( PackageNotifyTypes_t notifyType, void *para
 static bool LmHandlerPackageIsTxPending( void );
 
 static void LmHandlerPackagesProcess( void );
-#include <stdio.h>
+
 LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
                                       LmHandlerParams_t *handlerParams )
 {
@@ -261,12 +261,10 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
     IsClassBSwitchPending = false;
     IsUplinkTxPending = false;
 
-
     if( LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks, LmHandlerParams->Region ) != LORAMAC_STATUS_OK )
     {
        return LORAMAC_HANDLER_ERROR;
     }
-
     // Restore data if required
     nbNvmData = NvmDataMgmtRestore( );
 
@@ -349,6 +347,8 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
             }
         }
     }
+    printf("handler success\n");
+
     return LORAMAC_HANDLER_SUCCESS;
 }
 bool LmHandlerIsBusy( void )

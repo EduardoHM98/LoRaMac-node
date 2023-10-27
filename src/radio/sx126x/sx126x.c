@@ -120,7 +120,7 @@ void SX126xInit( DioIrqHandler dioIrq )
     SX126xSetStandby( STDBY_RC );
 
     // Initialize TCXO control
-    SX126xIoTcxoInit( );
+    //SX126xIoTcxoInit( );
 
     // Initialize RF switch control
     SX126xIoRfSwitchInit( );
