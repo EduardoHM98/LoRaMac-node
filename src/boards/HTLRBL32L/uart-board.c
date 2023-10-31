@@ -32,6 +32,7 @@
 #include "rf_driver_hal_rcc.h"
 #include "rf_driver_hal_gpio.h"
 #include "rf_device_hal_conf.h"
+#include "board-config.h"
 #include <stdio.h>
 
 

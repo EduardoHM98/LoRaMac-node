@@ -39,6 +39,8 @@
 extern "C"
 {
 #endif
+void MX_USART1_UART_Init();
+void IRQHandler_Config();
 
 /*!
  * Defines the time required for the TCXO to wakeup [ms].
@@ -56,20 +58,11 @@ extern "C"
 
 #define RADIO_NSS                                   PA_11
 
-//#define RADIO_DIO_0                                 PB_4
-#define RADIO_DIO_1                                 PB_4
-//#define RADIO_DIO_2                                 PB_0
-//#define RADIO_DIO_3                                 PC_13
-//#define RADIO_DIO_4                                 PA_5
-//#define RADIO_DIO_5                                 PA_4
-
-#define RADIO_SWITCH_ENABLE                         PB_0
+#define RADIO_DIO_1                                 PB_4//PB4
 
 #define RADIO_BUSY                                  PB_15
 
-#define RADIO_ANT_SWITCH_POWER                      PA_9
-#define RADIO_FREQ_SEL                              PA_1
-#define RADIO_XTAL_SEL                              PB_0
+#define RADIO_ANT_SWITCH_POWER                      PB_0
 #define RADIO_DEVICE_SEL                            PA_4
 
 /*

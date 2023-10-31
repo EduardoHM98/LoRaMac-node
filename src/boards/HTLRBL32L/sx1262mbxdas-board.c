@@ -154,14 +154,13 @@ void SX126xWaitOnBusy( void )
 {
     while( GpioRead( &SX126x.BUSY ) == 1 );
 }
-
+#include <stdio.h>
 void SX126xWakeup( void )
 {
     CRITICAL_SECTION_BEGIN( );
 
     GpioWrite( &SX126x.Spi.Nss, 0 );
 
-    SpiInOut( &SX126x.Spi, RADIO_GET_STATUS );
     SpiInOut( &SX126x.Spi, 0x00 );
 
     GpioWrite( &SX126x.Spi.Nss, 1 );
@@ -311,14 +310,7 @@ void SX126xSetRfTxPower( int8_t power )
 
 uint8_t SX126xGetDeviceId( void )
 {
-    if( GpioRead( &DeviceSel ) == 1 )
-    {
-        return SX1261;
-    }
-    else
-    {
-        return SX1262;
-    }
+    return SX1262;
 }
 
 void SX126xAntSwOn( void )

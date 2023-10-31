@@ -35,6 +35,7 @@
 #include "rf_driver_hal_exti.h"
 #include "rf_driver_hal_rcc.h"
 #include "rf_device_hal_conf.h"
+#include <stdio.h>
 
 EXTI_HandleTypeDef HEXTI_InitStructure;
 static Gpio_t *GpioIrq[16];
@@ -130,6 +131,43 @@ void GpioMcuSetContext( Gpio_t *obj, void* context )
 
 void GpioMcuSetInterrupt( Gpio_t *obj, IrqModes irqMode, IrqPriorities irqPriority, GpioIrqHandler *irqHandler )
 {
+
+     GPIO_InitTypeDef   GPIO_InitStructure;
+  
+  EXTI_ConfigTypeDef EXTI_Config_InitStructure;
+  
+  /* Enable GPIOC clock */
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+  /* Configure PB.4 pin as input floating */
+  GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStructure.Pull = GPIO_NOPULL;
+  GPIO_InitStructure.Pin = GPIO_PIN_4;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+  EXTI_Config_InitStructure.Line =    EXTI_LINE_PB4;
+  EXTI_Config_InitStructure.Trigger = EXTI_TRIGGER_RISING_EDGE;
+  EXTI_Config_InitStructure.Type =    EXTI_TYPE_EDGE;
+   
+  HAL_EXTI_SetConfigLine(&HEXTI_InitStructure, &EXTI_Config_InitStructure);
+  HAL_EXTI_RegisterCallback(&HEXTI_InitStructure, HAL_EXTI_COMMON_CB_ID, (void(*) (uint32_t))irqHandler);
+  HAL_EXTI_Cmd(&HEXTI_InitStructure , ENABLE);
+  
+  HAL_EXTI_ClearPending(&HEXTI_InitStructure);
+  
+  /* Enable and set line 10 Interrupt to the lowest priority */
+  HAL_NVIC_SetPriority(GPIOB_IRQn,2);
+  HAL_NVIC_EnableIRQ(GPIOB_IRQn);
+
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    GPIO_InitStruct.Pin = /*GPIO_PIN_2|GPIO_PIN_5|*/GPIO_PIN_1;//GPIO_PIN_9|GPIO_PIN_12|GPIO_PIN_13;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    /*
     if( obj->pin < IOE_0 )
     {
         uint32_t priority = 0;
@@ -188,6 +226,7 @@ void GpioMcuSetInterrupt( Gpio_t *obj, IrqModes irqMode, IrqPriorities irqPriori
 
         HAL_NVIC_SetPriority( IRQnb , priority);
         HAL_NVIC_EnableIRQ( IRQnb );
+        
     }
     else
     {
@@ -196,6 +235,7 @@ void GpioMcuSetInterrupt( Gpio_t *obj, IrqModes irqMode, IrqPriorities irqPriori
         GpioIoeSetInterrupt( obj, irqMode, irqPriority, irqHandler );
 #endif
     }
+    */
 }
 
 void GpioMcuRemoveInterrupt( Gpio_t *obj )
@@ -304,6 +344,8 @@ void GPIOB_IRQHandler( void )
 
 void HAL_GPIO_EXTI_Callback(GPIO_TypeDef* GPIOx, uint16_t gpioPin ) //TODO
 {
+    printf("gpiob irq callback\n");
+
     uint8_t callbackIndex = 0;
 
     if( gpioPin > 0 )
@@ -320,4 +362,46 @@ void HAL_GPIO_EXTI_Callback(GPIO_TypeDef* GPIOx, uint16_t gpioPin ) //TODO
         GpioIrq[callbackIndex]->IrqHandler( GpioIrq[callbackIndex]->Context );
     }
 }
+void gpio_irq(void);
+void IRQHandler_Config(void)
+{
+  GPIO_InitTypeDef   GPIO_InitStructure;
+  
+  EXTI_ConfigTypeDef EXTI_Config_InitStructure;
+  
+  /* Enable GPIOC clock */
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+  /* Configure PB.4 pin as input floating */
+  GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStructure.Pull = GPIO_NOPULL;
+  GPIO_InitStructure.Pin = GPIO_PIN_4;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
 
+  EXTI_Config_InitStructure.Line =    EXTI_LINE_PB4;
+  EXTI_Config_InitStructure.Trigger = EXTI_TRIGGER_RISING_EDGE;
+  EXTI_Config_InitStructure.Type =    EXTI_TYPE_EDGE;
+   
+  HAL_EXTI_SetConfigLine(&HEXTI_InitStructure, &EXTI_Config_InitStructure);
+  HAL_EXTI_RegisterCallback(&HEXTI_InitStructure, HAL_EXTI_COMMON_CB_ID, (void(*) (uint32_t))gpio_irq);
+  HAL_EXTI_Cmd(&HEXTI_InitStructure , ENABLE);
+  
+  HAL_EXTI_ClearPending(&HEXTI_InitStructure);
+  
+  /* Enable and set line 10 Interrupt to the lowest priority */
+  HAL_NVIC_SetPriority(GPIOB_IRQn,2);
+  HAL_NVIC_EnableIRQ(GPIOB_IRQn);
+
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    GPIO_InitStruct.Pin = /*GPIO_PIN_2|GPIO_PIN_5|*/GPIO_PIN_1;//GPIO_PIN_9|GPIO_PIN_12|GPIO_PIN_13;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+}
+void gpio_irq(void){
+printf("CALLBACK IRQ\n");
+
+}

@@ -267,7 +267,6 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
     }
     // Restore data if required
     nbNvmData = NvmDataMgmtRestore( );
-
     // Try to restore from NVM and query the mac if possible.
     if( ( LmHandlerCallbacks->OnNvmDataChange != NULL ) && ( nbNvmData > 0 ) )
     {
@@ -347,7 +346,6 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
             }
         }
     }
-    printf("handler success\n");
 
     return LORAMAC_HANDLER_SUCCESS;
 }

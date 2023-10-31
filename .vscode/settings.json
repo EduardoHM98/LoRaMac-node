@@ -128,8 +128,15 @@
             "type_traits": "c",
             "stdio.h": "c",
             "rf_driver_hal_uart.h": "c",
-            "stdint.h": "c"
+            "stdint.h": "c",
+            "rf_driver_hal_rcc.h": "c",
+            "rf_device_hal_conf.h": "c",
+            "rf_driver_hal_cortex.h": "c",
+            "timer.h": "c",
+            "rf_driver_hal_spi.h": "c",
+            "sx126x.h": "c",
+            "rf_driver_hal_gpio_ex.h": "c"
         },
-        "cortex-debug.variableUseNaturalFormat": true
+        "cortex-debug.variableUseNaturalFormat": false
     }
     

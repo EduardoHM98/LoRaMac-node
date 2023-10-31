@@ -23,6 +23,7 @@
  * \author    Christian Lehmen ( HT Micron )
  */
 //#include "bluenrg_lpx.h"
+#include "uart-board.h"
 #include "rf_driver_hal.h"
 #include "utilities.h"
 #include "gpio.h"
@@ -37,6 +38,7 @@
 #include "rtc-board.h"
 #include "sx126x-board.h"
 #include "board.h"
+#include <stdio.h>
 
 /*!
  * Unique Devices IDs register set ( STM32L0xxx )
@@ -103,8 +105,11 @@ void BoardInitMcu( void )
     
     if( McuInitialized == false )
     {
-        HAL_Init( );
+        HAL_NVIC_SetPriority(SysTick_IRQn,0);
+        __HAL_RCC_SYSCFG_CLK_ENABLE();
 
+        HAL_Init( );
+        
         //SystemClockConfig( );
 
         UsbIsConnected = true;
@@ -115,6 +120,10 @@ void BoardInitMcu( void )
         //UartInit( &Uart1, UART_1, UART_TX, UART_RX );
         //UartConfig( &Uart1, RX_TX, 115200, UART_8_BIT, UART_1_STOP_BIT, NO_PARITY, NO_FLOW_CTRL );
         MX_USART1_UART_Init();
+        IRQHandler_Config();
+
+
+       // while(1);
         RtcInit( );
 
         BoardUnusedIoInit( );
@@ -131,6 +140,19 @@ void BoardInitMcu( void )
 
     SpiInit( &SX126x.Spi, SPI_1, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC );
     SX126xIoInit( );
+
+//	uint8_t buffer_read;
+//	SX126xReadRegisters(REG_XTA_TRIM, &buffer_read, 1 );
+//	printf("read XTA: %02x\n",buffer_read);
+
+//	SX126xWriteRegister(REG_XTA_TRIM, 0x2D );
+
+//	SX126xReadRegisters(REG_XTA_TRIM, &buffer_read, 1 );
+//	printf("read XTA: %02x\n",buffer_read);
+
+ //   while(1);
+
+
 
     if( McuInitialized == false )
     {
@@ -276,6 +298,7 @@ void SystemClockReConfig( void )
     {
     }
     */
+   
 }
 
 void SysTick_IRQHandler( void )

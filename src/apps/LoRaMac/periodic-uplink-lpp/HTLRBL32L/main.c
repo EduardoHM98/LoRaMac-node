@@ -168,10 +168,6 @@ static void OnTxFrameCtrlChanged( LmHandlerMsgTypes_t isTxConfirmed );
 static void OnPingSlotPeriodicityChanged( uint8_t pingSlotPeriodicity );
 
 
-/*!
- * \brief Function executed on Beacon timer Timeout event
- */
-static void OnLedBeaconTimerEvent( void* context );
 
 static LmHandlerCallbacks_t LmHandlerCallbacks =
 {
@@ -231,8 +227,10 @@ extern Uart_t Uart1;
 /*!
  * Main application entry point.
  */
+#include "sx126x.h"
+#include "sx126x-board.h"
 int main( void )
-{
+    {
     BoardInitMcu( );
 
     // Initialize transmission periodicity variable
@@ -244,18 +242,18 @@ int main( void )
                     &appVersion,
                     &gitHubVersion );
 
-    printf("preparing frame00\n");
-
+   // uint8_t buffer_read;
+   // SX126xReadRegisters(REG_XTA_TRIM, &buffer_read, 1 );
+  //  printf("read XTA: %02x\n",buffer_read);
 
     if ( LmHandlerInit( &LmHandlerCallbacks, &LmHandlerParams ) != LORAMAC_HANDLER_SUCCESS )
     {
-        printf( "LoRaMac wasn't properly initialized\n" );
         // Fatal error, endless loop.
         while ( 1 )
         {
         }
     }
-    printf("did the printf just stopped working?\n");
+
     // Set system maximum tolerated rx error in milliseconds
     LmHandlerSetSystemMaxRxError( 20 );
 
@@ -266,7 +264,6 @@ int main( void )
     LmHandlerJoin( );
 
     StartTxProcess( LORAMAC_HANDLER_TX_ON_TIMER );
-
     while( 1 )
     {
 

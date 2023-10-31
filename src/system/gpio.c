@@ -38,7 +38,8 @@ void GpioSetContext( Gpio_t *obj, void* context )
 
 void GpioSetInterrupt( Gpio_t *obj, IrqModes irqMode, IrqPriorities irqPriority, GpioIrqHandler *irqHandler )
 {
-    GpioMcuSetInterrupt( obj, irqMode, irqPriority, irqHandler );
+    GpioMcuSetInterrupt( obj, irqMode, irqPriority, irqHandler ); 
+    
 }
 
 void GpioRemoveInterrupt( Gpio_t *obj )

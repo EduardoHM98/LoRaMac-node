@@ -50,9 +50,11 @@ void SpiInit( Spi_t *obj, SpiId_t spiId, PinNames mosi, PinNames miso, PinNames 
         GpioInit( &obj->Miso, miso, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF2_SPI1 );
         GpioInit( &obj->Sclk, sclk, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF2_SPI1 );
         GpioInit( &obj->Nss, nss, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF0_SPI1 );
+
     }
     else
     {
+        /*
         __HAL_RCC_SPI2_FORCE_RESET( );
         __HAL_RCC_SPI2_RELEASE_RESET( );
         __HAL_RCC_SPI2_CLK_ENABLE( );
@@ -63,6 +65,7 @@ void SpiInit( Spi_t *obj, SpiId_t spiId, PinNames mosi, PinNames miso, PinNames 
         GpioInit( &obj->Miso, miso, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF3_SPI2 );
         GpioInit( &obj->Sclk, sclk, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF1_SPI2 );
         GpioInit( &obj->Nss, nss, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF1_SPI2 );
+        */
     }
 
     if( nss == NC )
@@ -94,13 +97,14 @@ void SpiDeInit( Spi_t *obj )
 void SpiFormat( Spi_t *obj, int8_t bits, int8_t cpol, int8_t cpha, int8_t slave )
 {
     SpiHandle[obj->SpiId].Init.Direction = SPI_DIRECTION_2LINES;
+    SpiHandle[obj->SpiId].Init.DataSize = SPI_DATASIZE_8BIT;//TODO rvm
     if( bits == SPI_DATASIZE_8BIT )
     {
         SpiHandle[obj->SpiId].Init.DataSize = SPI_DATASIZE_8BIT;
     }
     else
     {
-        SpiHandle[obj->SpiId].Init.DataSize = SPI_DATASIZE_16BIT;
+        SpiHandle[obj->SpiId].Init.DataSize = SPI_DATASIZE_8BIT;//TODO always 8 bits SPI_DATASIZE_16BIT
     }
     SpiHandle[obj->SpiId].Init.CLKPolarity = cpol;
     SpiHandle[obj->SpiId].Init.CLKPhase = cpha;
@@ -122,7 +126,7 @@ void SpiFormat( Spi_t *obj, int8_t bits, int8_t cpol, int8_t cpha, int8_t slave 
 void SpiFrequency( Spi_t *obj, uint32_t hz )
 {
     uint32_t divisor = 0;
-    uint32_t sysClkTmp = SYSCLK_64M; //TODO change static value
+    uint32_t sysClkTmp = 64000000; //TODO change static value
     uint32_t baudRate;
 
     while( sysClkTmp > hz )
@@ -140,11 +144,17 @@ void SpiFrequency( Spi_t *obj, uint32_t hz )
               ( ( ( divisor & 0x2 ) == 0 ) ? 0x0 : SPI_CR1_BR_1 ) |
               ( ( ( divisor & 0x1 ) == 0 ) ? 0x0 : SPI_CR1_BR_0 );
 
-    SpiHandle[obj->SpiId].Init.BaudRatePrescaler = baudRate;
+    SpiHandle[obj->SpiId].Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;//TODO baudRate;
 }
 
 uint16_t SpiInOut( Spi_t *obj, uint16_t outData )
 {
+      uint16_t rxData ;
+
+  HAL_SPI_TransmitReceive( &(SpiHandle[obj->SpiId]), ( uint8_t * ) &outData, ( uint8_t* ) &rxData, 1, HAL_MAX_DELAY);
+
+  return rxData;
+    /*
     uint8_t rxData = 0;
 
     if( ( obj == NULL ) || ( SpiHandle[obj->SpiId].Instance ) == NULL )
@@ -164,6 +174,6 @@ uint16_t SpiInOut( Spi_t *obj, uint16_t outData )
 
     CRITICAL_SECTION_END( );
 
-    return( rxData );
+    return( rxData );*/
 }
 

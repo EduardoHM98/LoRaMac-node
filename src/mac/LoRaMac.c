@@ -1561,6 +1561,7 @@ bool LoRaMacIsBusy( void )
     {
         return false;
     }
+
     return true;
 }
 
@@ -3737,6 +3738,8 @@ static uint8_t IsRequestPending( void )
 
 LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacCallback_t* callbacks, LoRaMacRegion_t region )
 {
+    
+
     GetPhyParams_t getPhy;
     PhyParam_t phyParam;
     if( ( primitives == NULL ) ||
@@ -3778,6 +3781,7 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
     params.NvmGroup2 = &Nvm.RegionGroup2;
     params.Bands = &RegionBands;
     RegionInitDefaults( Nvm.MacGroup2.Region, &params );
+
 
     // Reset to defaults
     getPhy.Attribute = PHY_DUTY_CYCLE;
@@ -3901,6 +3905,7 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
     MacCtx.RadioEvents.RxError = OnRadioRxError;
     MacCtx.RadioEvents.TxTimeout = OnRadioTxTimeout;
     MacCtx.RadioEvents.RxTimeout = OnRadioRxTimeout;
+
     Radio.Init( &MacCtx.RadioEvents );
 
     // Initialize the Secure Element driver
@@ -3931,7 +3936,6 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
     srand1( Radio.Random( ) );
     Radio.SetPublicNetwork( Nvm.MacGroup2.PublicNetwork );
     Radio.Sleep( );
-
     LoRaMacEnableRequests( LORAMAC_REQUEST_HANDLING_ON );
 
     return LORAMAC_STATUS_OK;
