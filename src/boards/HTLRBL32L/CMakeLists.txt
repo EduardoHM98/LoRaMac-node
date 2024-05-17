@@ -47,6 +47,7 @@ list(APPEND ${PROJECT_NAME}_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_flash.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_gpio.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_i2c.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_i2c_ex.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_pwr.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_pwr_ex.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_rcc.c"

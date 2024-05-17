@@ -14,7 +14,7 @@
             //     Linux   : /usr
             //     OSX     : /usr/local
             // It is required to uncomment and to fill the following line.
-            "TOOLCHAIN_PREFIX":"C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/12.2 mpacbti-rel1",
+                "TOOLCHAIN_PREFIX":"C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/12.2 mpacbti-rel1",
             // In case your OpenOCD is not installed under the default path:
             //     Windows : C:/openocd/bin/openocd.exe
             //     Linux   : /usr/bin/openocd
@@ -45,7 +45,7 @@
             // Select the active region for which the stack will be initialized.
             // You can choose between:
             // LORAMAC_REGION_EU868, LORAMAC_REGION_US915, ..
-            "ACTIVE_REGION":"LORAMAC_REGION_US915",
+            "ACTIVE_REGION":"LORAMAC_REGION_AU915",
     
             // Select the type of modulation, applicable to the ping-pong or
             // rx-sensi applications. You can choose between:
@@ -74,7 +74,7 @@
             "REGION_US915":"ON",
             "REGION_CN779":"OFF",
             "REGION_EU433":"OFF",
-            "REGION_AU915":"OFF",
+            "REGION_AU915":"ON",
             "REGION_CN470":"OFF",
             "REGION_AS923":"OFF",
             "REGION_KR920":"OFF",

@@ -52,6 +52,7 @@
  */
 Uart_t Uart1;
 
+I2c_t I2C;
 /*!
  * Initializes the unused GPIO to a know status
  */
@@ -139,6 +140,7 @@ void BoardInitMcu( void )
     }
 
     SpiInit( &SX126x.Spi, SPI_1, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC );
+    I2cInit(&I2C,I2C_1,I2C_SCL,I2C_SDA);
     SX126xIoInit( );
 
 //	uint8_t buffer_read;

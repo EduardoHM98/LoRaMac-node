@@ -93,8 +93,8 @@ void IRQHandler_Config();
 #define SWCLK                                       PA_14
 #define SWDAT                                       PA_13
 */
-#define I2C_SCL                                     PB_8
-#define I2C_SDA                                     PB_9
+#define I2C_SCL                                     PB_6
+#define I2C_SDA                                     PB_7
 
 #define UART_TX                                     PA_9
 #define UART_RX                                     PA_8
