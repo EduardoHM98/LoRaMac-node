@@ -20,17 +20,20 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
+#include <stdio.h>
 #include "bluenrg_lpx.h"
 #include "rf_driver_hal_adc.h"
 #include "rf_driver_hal_rcc.h"
 #include "board-config.h"
 #include "adc-board.h"
 
+
 ADC_HandleTypeDef AdcHandle;
+ADC_ConfigChannelTypeDef xChannel;
 
 void AdcMcuInit( Adc_t *obj, PinNames adcInput )
 {
-/*     AdcHandle.Instance = ADC;
+     AdcHandle.Instance = ADC;
     
     __HAL_RCC_ADCDIG_CLK_ENABLE();
     __HAL_RCC_ADCANA_CLK_ENABLE();
@@ -40,77 +43,33 @@ void AdcMcuInit( Adc_t *obj, PinNames adcInput )
     if( adcInput != NC )
     {
         GpioInit( &obj->AdcInput, adcInput, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    } */
+    } 
 }
 
 void AdcMcuConfig( void )
 {
     // Configure ADC
- /*    AdcHandle.Init.OversamplingMode      = DISABLE;
-    AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
-    AdcHandle.Init.Resolution            = ADC_RESOLUTION_12B;
-    AdcHandle.Init.SamplingTime          = ADC_SAMPLETIME_160CYCLES_5;
-    AdcHandle.Init.ScanConvMode          = ADC_SCAN_DIRECTION_FORWARD;
-    AdcHandle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;
-    AdcHandle.Init.ContinuousConvMode    = DISABLE;
-    AdcHandle.Init.DiscontinuousConvMode = DISABLE;
-    AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;
-    AdcHandle.Init.ExternalTrigConv      = ADC_SOFTWARE_START;
-    AdcHandle.Init.DMAContinuousRequests = DISABLE;
-    AdcHandle.Init.EOCSelection          = ADC_EOC_SINGLE_CONV;
-    AdcHandle.Init.Overrun               = ADC_OVR_DATA_PRESERVED;
-    AdcHandle.Init.LowPowerAutoWait      = DISABLE;
-    AdcHandle.Init.LowPowerFrequencyMode = ENABLE; // To be enabled only if ADC clock < 2.8 MHz
-    AdcHandle.Init.LowPowerAutoPowerOff  = DISABLE;
-    HAL_ADC_Init( &AdcHandle ); */
+    AdcHandle.Instance = ADC;
+    AdcHandle.Init.DataRatio = ADC_DS_RATIO_128;
+    AdcHandle.Init.DataWidth = ADC_DS_DATA_WIDTH_16_BIT;
+    AdcHandle.Init.InvertOutputBitMode = ADC_INVERT_OUTBIT_SING;
+    AdcHandle.Init.OverrunMode = ADC_NEW_DATA_IS_KEPT;
+    AdcHandle.Init.SampleRate = ADC_SAMPLE_RATE_28;
+    AdcHandle.Init.SamplingMode = ADC_SAMPLING_AT_END;
+    AdcHandle.Init.SequenceLength = ADC_SEQ_LEN_01;
+    HAL_ADC_Init( &AdcHandle ); 
+
+    //channel config
+    xChannel.ChannelType = ADC_CH_BATTERY_LEVEL_DETECTOR;
+    xChannel.SequenceNumber = ADC_SEQ_POS_01;
+    xChannel.VoltRange = ADC_VIN_RANGE_3V6;
+    HAL_ADC_ConfigChannel(&AdcHandle, &xChannel);
+
 }
 
 uint16_t AdcMcuReadChannel( Adc_t *obj, uint32_t channel )
 {
-/*     ADC_ChannelConfTypeDef adcConf = { 0 };
-    uint16_t adcData = 0;
+    uint16_t adcValue = 0;
 
-    // Enable HSI
-    __HAL_RCC_HSI_ENABLE( );
-
-    // Wait till HSI is ready
-    while( __HAL_RCC_GET_FLAG( RCC_FLAG_HSIRDY ) == RESET )
-    {
-    }
-
-    // Wait the the Vrefint used by adc is set
-    while( __HAL_PWR_GET_FLAG( PWR_FLAG_VREFINTRDY ) == RESET )
-    {
-    }
-
-    __HAL_RCC_ADC1_CLK_ENABLE( );
-
-    // Calibrate ADC if any calibraiton hardware
-    HAL_ADCEx_Calibration_Start( &AdcHandle, ADC_SINGLE_ENDED );
-
-    // Deselects all channels
-    adcConf.Channel = ADC_CHANNEL_MASK;
-    adcConf.Rank = ADC_RANK_NONE; 
-    HAL_ADC_ConfigChannel( &AdcHandle, &adcConf );
-
-    // Configure ADC channel
-    adcConf.Channel = channel;
-    adcConf.Rank = ADC_RANK_CHANNEL_NUMBER;
-    HAL_ADC_ConfigChannel( &AdcHandle, &adcConf );
-
-    // Start ADC Software Conversion
-    HAL_ADC_Start( &AdcHandle );
-
-    HAL_ADC_PollForConversion( &AdcHandle, HAL_MAX_DELAY );
-
-    adcData = HAL_ADC_GetValue( &AdcHandle );
-
-    __HAL_ADC_DISABLE( &AdcHandle );
-
-    __HAL_RCC_ADC1_CLK_DISABLE( );
-
-    // Disable HSI
-    __HAL_RCC_HSI_DISABLE( );
-
-    return adcData;
- */}
+    return adcValue;
+ }

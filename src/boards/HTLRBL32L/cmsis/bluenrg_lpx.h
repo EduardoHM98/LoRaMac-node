@@ -33,18 +33,7 @@
   ******************************************************************************
   */
 
-#ifdef CONFIG_DEVICE_BLUENRG_LP
 
 #include "BlueNRG_LP.h" /* Header file supporting BlueNRG-LP */
-
-#elif defined CONFIG_DEVICE_BLUENRG_LPS
-
-#include "BlueNRG_LPS.h" /* Header file supporting BlueNRG-LPS */
-
-#else
-
-    #error "Define device type!"
-
-#endif
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

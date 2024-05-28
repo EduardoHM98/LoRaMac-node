@@ -41,6 +41,10 @@
 #include "LmhpCompliance.h"
 #include "CayenneLpp.h"
 #include "LmHandlerMsgDisplay.h"
+#include "adc.h"
+
+#include "BlueNRG_LP.h"
+#include "rf_driver_ll_adc.h"
 
 
 
@@ -242,9 +246,6 @@ int main( void )
                     &appVersion,
                     &gitHubVersion );
 
-   // uint8_t buffer_read;
-   // SX126xReadRegisters(REG_XTA_TRIM, &buffer_read, 1 );
-  //  printf("read XTA: %02x\n",buffer_read);
 
     if ( LmHandlerInit( &LmHandlerCallbacks, &LmHandlerParams ) != LORAMAC_HANDLER_SUCCESS )
     {

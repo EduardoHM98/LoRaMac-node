@@ -9,7 +9,7 @@
                     "${workspaceFolder}"
                 ]
             },
-            "compilerPath": "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin/arm-none-eabi-gcc.exe",
+            "compilerPath": "C:/Program Files (x86)/GNU Tools ARM Embedded/bin/arm-none-eabi-gcc.exe",
             "cStandard": "c11",
             "cppStandard": "c++17",
             "configurationProvider": "ms-vscode.cmake-tools",

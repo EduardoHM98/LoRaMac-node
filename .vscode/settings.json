@@ -1,8 +1,8 @@
 // Place your settings in this file to overwrite default and user settings.
 {
 
-    "cortex-debug.gdbPath": "C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/12.2 mpacbti-rel1/bin/arm-none-eabi-gdb.exe",
-    "cortex-debug.openocdPath": "C:/msys64/mingw64/bin/openocd.exe",
+    "cortex-debug.gdbPath": "C:/Program Files (x86)/GNU Tools ARM Embedded/bin/arm-none-eabi-gdb.exe",
+    "cortex-debug.openocdPath": "C:/openocd/bin/openocd.exe",
     
         "cmake.configureSettings": {
     
@@ -14,7 +14,7 @@
             //     Linux   : /usr
             //     OSX     : /usr/local
             // It is required to uncomment and to fill the following line.
-                "TOOLCHAIN_PREFIX":"C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/12.2 mpacbti-rel1",
+                "TOOLCHAIN_PREFIX":"C:/Program Files (x86)/GNU Tools ARM Embedded",
             // In case your OpenOCD is not installed under the default path:
             //     Windows : C:/openocd/bin/openocd.exe
             //     Linux   : /usr/bin/openocd
@@ -135,7 +135,11 @@
             "timer.h": "c",
             "rf_driver_hal_spi.h": "c",
             "sx126x.h": "c",
-            "rf_driver_hal_gpio_ex.h": "c"
+            "rf_driver_hal_gpio_ex.h": "c",
+            "rf_driver_hal_adc.h": "c",
+            "lmhpcompliance.h": "c",
+            "gpio-board.h": "c",
+            "hal_ext_irq.h": "c"
         },
         "cortex-debug.variableUseNaturalFormat": false
     }
