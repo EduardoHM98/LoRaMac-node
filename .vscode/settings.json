@@ -139,7 +139,9 @@
             "rf_driver_hal_adc.h": "c",
             "lmhpcompliance.h": "c",
             "gpio-board.h": "c",
-            "hal_ext_irq.h": "c"
+            "hal_ext_irq.h": "c",
+            "rf_driver_hal_power_manager.h": "c",
+            "rf_driver_ll_pwr.h": "c"
         },
         "cortex-debug.variableUseNaturalFormat": false
     }

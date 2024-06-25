@@ -24,6 +24,8 @@ enable_language(ASM)
 #---------------------------------------------------------------------------------------
 
 list(APPEND ${PROJECT_NAME}_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/ST/hal/Src/osal_memcpy.s"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/ST/hal/Src/context_switch.s"
     "${CMAKE_CURRENT_SOURCE_DIR}/adc-board.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/board.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/delay-board.c"
@@ -57,9 +59,12 @@ list(APPEND ${PROJECT_NAME}_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_uart.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_uart_ex.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_exti.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../mcu/stm32/BlueNRG-LP/src/rf_driver_hal_power_manager.c"
 )
 
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
+
+
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC -DUSE_HAL_DRIVER  -DCONFIG_HW_HSE_TUNE=32 -DCONFIG_HW_SMPS_10uH -DCONFIG_HW_LS_RO -DCONFIG_DEVICE_BLUENRG_LP)
 # Add define if debbuger support is enabled

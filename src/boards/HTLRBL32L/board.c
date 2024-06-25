@@ -22,7 +22,9 @@
  * 
  * \author    Christian Lehmen ( HT Micron )
  */
-//#include "bluenrg_lpx.h"
+
+
+#include <stdio.h>
 #include "uart-board.h"
 #include "rf_driver_hal.h"
 #include "utilities.h"
@@ -38,7 +40,8 @@
 #include "rtc-board.h"
 #include "sx126x-board.h"
 #include "board.h"
-#include <stdio.h>
+#include "rf_driver_hal_power_manager.h"
+
 
 /*!
  * Unique Devices IDs register set ( STM32L0xxx )
@@ -328,28 +331,7 @@ uint8_t GetBoardPowerSource( void )
   */
 void LpmEnterStopMode( void)
 {
-    /*
-    CRITICAL_SECTION_BEGIN( );
 
-    BoardDeInitMcu( );
-
-    // Disable the Power Voltage Detector
-    HAL_PWR_DisablePVD( );
-
-    // Clear wake up flag
-    SET_BIT( PWR->CR, PWR_CR_CWUF );
-
-    // Enable Ultra low power mode
-    HAL_PWREx_EnableUltraLowPower( );
-
-    // Enable the fast wake up from Ultra low power mode
-    HAL_PWREx_EnableFastWakeUp( );
-
-    CRITICAL_SECTION_END( );
-
-    // Enter Stop Mode
-    HAL_PWR_EnterSTOPMode( PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI );
-    */
 }
 
 /*!
@@ -376,30 +358,37 @@ void LpmExitStopMode( void )
  */
 void LpmEnterSleepMode( void)
 {
- //   HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+    uint32_t wakeupSources;
+    WakeupSourceConfig_TypeDef wakeupIO;
+    PowerSaveLevels stopLevel;
+
+    int ret_val = 0;
+
+    wakeupIO.IO_Mask_High_polarity = WAKEUP_PA10;
+    wakeupIO.IO_Mask_Low_polarity = WAKEUP_PA8;
+    wakeupIO.RTC_enable = 1;    
+    wakeupIO.LPU_enable = 0;
+    ret_val = HAL_PWR_MNGR_Request(POWER_SAVE_LEVEL_STOP_WITH_TIMER, wakeupIO, &stopLevel);
+    if (ret_val != SUCCESS)
+        printf("Error during clock config 0x%2x\r\n", ret_val);
+    if (stopLevel >= POWER_SAVE_LEVEL_STOP_WITH_TIMER) {
+        wakeupSources = HAL_PWR_MNGR_WakeupSource();
+        printf("Wake up Source: %lu\n",wakeupSources);
+    }
 }
 
 void BoardLowPowerHandler( void )
 {
 
- /*    __disable_irq()
+    __disable_irq();
 
     LpmEnterLowPower();
 
-    __enable_irq(); */
+    __enable_irq(); 
 }
 
 
 #if !defined ( __CC_ARM )
-
-
-/*int _write( int fd, const void *buf, size_t count )
-{
-
-    while( UartPutBuffer( &Uart1, ( uint8_t* )buf, ( uint16_t )count ) != 0 ){ };
-    return count;
-}*/
-
 /*
  * Function to be used by stdin for scanf etc
  */

@@ -233,6 +233,7 @@ extern Uart_t Uart1;
  */
 #include "sx126x.h"
 #include "sx126x-board.h"
+#include "rf_driver_hal_power_manager.h"
 int main( void )
     {
     BoardInitMcu( );
@@ -265,6 +266,14 @@ int main( void )
     LmHandlerJoin( );
 
     StartTxProcess( LORAMAC_HANDLER_TX_ON_TIMER );
+
+
+
+
+
+
+
+
     while( 1 )
     {
 
@@ -276,7 +285,6 @@ int main( void )
 
         // Process application uplinks management
         UplinkProcess( );
-
         CRITICAL_SECTION_BEGIN( );
         if( IsMacProcessPending == 1 )
         {

@@ -27,7 +27,6 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "bluenrg_lpx.h"
-
 /** @addtogroup RF_DRIVER_LL_Driver
   * @{
   */
@@ -1985,7 +1984,7 @@ __STATIC_INLINE void LL_PWR_EnableGPIORET(void)
 }
 
 /**
-  * @brief  Disable the GPIORET feature, don’t retain their status during DEEPSTOP and exiting from DEEPSTOP.
+  * @brief  Disable the GPIORET feature, donï¿½t retain their status during DEEPSTOP and exiting from DEEPSTOP.
   * @rmtoll CR2         GPIORET      LL_PWR_DisableGPIORET
   * @param  None
   * @retval None
@@ -2029,7 +2028,7 @@ __STATIC_INLINE void LL_PWR_EnableDBGRET(void)
 }
 
 /**
-  * @brief  Disable the DBGRET feature, GPIOA_Pin_2 and GPIOA_Pin_3 don’t retain 
+  * @brief  Disable the DBGRET feature, GPIOA_Pin_2 and GPIOA_Pin_3 donï¿½t retain 
   *         status during DEEPSTOP and exiting from DEEPSTOP.
   * @rmtoll CR2         DBGRET      LL_PWR_DisableDBGRET
   * @param  None
