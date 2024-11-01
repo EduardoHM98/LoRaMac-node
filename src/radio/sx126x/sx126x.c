@@ -496,6 +496,7 @@ void SX126xSetDio3AsTcxoCtrl( RadioTcxoCtrlVoltage_t tcxoVoltage, uint32_t timeo
 
 void SX126xSetRfFrequency( uint32_t frequency )
 {
+    printf("Frequency: %u\n",frequency);
     uint8_t buf[4];
 
     if( ImageCalibrated == false )

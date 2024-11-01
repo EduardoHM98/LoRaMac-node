@@ -61,7 +61,7 @@ extern "C"
 /*!
  * Join accept delay of 5 seconds.
  */
-#define REGION_COMMON_DEFAULT_JOIN_ACCEPT_DELAY1        5000
+#define REGION_COMMON_DEFAULT_JOIN_ACCEPT_DELAY1        5200
 
 /*!
  * Join accept delay of 6 seconds.

@@ -499,6 +499,7 @@ void RegionCommonRxBeaconSetup( RegionCommonRxBeaconSetupParams_t* rxBeaconSetup
 void RegionCommonCountNbOfEnabledChannels( RegionCommonCountNbOfEnabledChannelsParams_t* countNbOfEnabledChannelsParams,
                                            uint8_t* enabledChannels, uint8_t* nbEnabledChannels, uint8_t* nbRestrictedChannels )
 {
+    printf("Enabled Channels: ");
     uint8_t nbChannelCount = 0;
     uint8_t nbRestrictedChannelsCount = 0;
 
@@ -532,6 +533,7 @@ void RegionCommonCountNbOfEnabledChannels( RegionCommonCountNbOfEnabledChannelsP
                     continue;
                 }
                 enabledChannels[nbChannelCount++] = i + j;
+                printf("Channel: %d freq: %lu | ", i + j,countNbOfEnabledChannelsParams->Channels[i+j].Frequency);
             }
         }
     }

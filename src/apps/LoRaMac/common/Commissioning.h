@@ -53,7 +53,7 @@ extern "C" {
 #define ABP_ACTIVATION_LRWAN_VERSION_V10x                  0x01000400 // 1.0.4.0
 #define ABP_ACTIVATION_LRWAN_VERSION_V11x                  0x01010100 // 1.1.1.0
 
-#define ABP_ACTIVATION_LRWAN_VERSION                       ABP_ACTIVATION_LRWAN_VERSION_V11x
+#define ABP_ACTIVATION_LRWAN_VERSION                       ABP_ACTIVATION_LRWAN_VERSION_V10x
 
 /*!
  * Indicates if the end-device is to be connected to a private or public network

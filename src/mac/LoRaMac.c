@@ -808,7 +808,7 @@ static void ProcessRadioTxDone( void )
     {
         Radio.Sleep( );
     }
-
+    printf("RX1 Delay: %lu  RX2 Delay: %lu\n",MacCtx.RxWindow1Delay,MacCtx.RxWindow2Delay);
     // Setup timers
     CRITICAL_SECTION_BEGIN( );
     uint32_t offset = TimerGetCurrentTime( ) - TxDoneParams.CurTime;
@@ -887,6 +887,12 @@ static void ProcessRadioRxDone( void )
     FCntIdentifier_t fCntID;
     uint8_t macCmdPayload[2] = { 0 };
     Mlme_t joinType = MLME_JOIN;
+
+    printf("LoRaWAN Payload Received: \n");
+		for(uint8_t x=0; x<size;x++){
+				printf("%02x",payload[x]);
+		}
+    printf(" Size: %u, rssi: %d, snr :%d\n",size,rssi,snr);
 
     LoRaMacRadioEvents.Events.RxProcessPending = 0;
 
@@ -1932,6 +1938,7 @@ static void OnTxDelayedTimerEvent( void* context )
 
 static void OnRxWindow1TimerEvent( void* context )
 {
+    printf("\n-RX1-\n");
     MacCtx.RxWindow1Config.Channel = MacCtx.Channel;
     MacCtx.RxWindow1Config.DrOffset = Nvm.MacGroup2.MacParams.Rx1DrOffset;
     MacCtx.RxWindow1Config.DownlinkDwellTime = Nvm.MacGroup2.MacParams.DownlinkDwellTime;
@@ -1946,8 +1953,10 @@ static void OnRxWindow2TimerEvent( void* context )
 {
     // Check if we are processing Rx1 window.
     // If yes, we don't setup the Rx2 window.
+    printf("\n-RX2-\n");
     if( MacCtx.RxSlot == RX_SLOT_WIN_1 )
     {
+        printf("RxWindow2ERROR\n");
         return;
     }
     MacCtx.RxWindow2Config.Channel = MacCtx.Channel;
@@ -2881,8 +2890,8 @@ static void ComputeRxWindowParameters( void )
                                      &MacCtx.RxWindow2Config );
 
     // Default setup, in case the device joined
-    MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.ReceiveDelay1 + MacCtx.RxWindow1Config.WindowOffset;
-    MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.ReceiveDelay2 + MacCtx.RxWindow2Config.WindowOffset;
+    MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.ReceiveDelay1 + MacCtx.RxWindow1Config.WindowOffset + 200;
+    MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.ReceiveDelay2 + MacCtx.RxWindow2Config.WindowOffset + 200;
 
     if( MacCtx.TxMsg.Type != LORAMAC_MSG_TYPE_DATA )
     {

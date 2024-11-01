@@ -1354,6 +1354,7 @@ void RadioIrqProcess( void )
 
         if( ( irqRegs & IRQ_PREAMBLE_DETECTED ) == IRQ_PREAMBLE_DETECTED )
         {
+            printf("PHY PRE OK\n\r");
             //__NOP( );
         }
 

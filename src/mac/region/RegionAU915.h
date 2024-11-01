@@ -72,7 +72,7 @@ extern "C"
 /*!
  * Default datarate used by the node
  */
-#define AU915_DEFAULT_DATARATE                      DR_2
+#define AU915_DEFAULT_DATARATE                      DR_0
 
 /*!
  * The minimum datarate which is used when the
