@@ -71,7 +71,7 @@ extern "C" {
 /*!
  * end-device IEEE EUI (big endian)
  */
-#define LORAWAN_DEVICE_EUI                                 { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0xEF, 0xFF, 0x01 }
+#define LORAWAN_DEVICE_EUI                                 { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0xEF, 0xFF, 0x03 }
 
 /*!
  * App/Join server IEEE EUI (big endian)
@@ -88,12 +88,12 @@ extern "C" {
  * When set to 0 DevAddr is automatically set with a value provided by a pseudo
  *      random generator seeded with a value provided by the MCU platform
  */
-#define STATIC_DEVICE_ADDRESS                              0
+#define STATIC_DEVICE_ADDRESS                              1
 
 /*!
  * Device address on the network (big endian)
  */
-#define LORAWAN_DEVICE_ADDRESS                             ( uint32_t )0x00000000
+#define LORAWAN_DEVICE_ADDRESS                             ( uint32_t )0xDEADBEEC
 
 #define SOFT_SE_KEY_LIST                                                                                            \
     {                                                                                                               \

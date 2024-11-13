@@ -436,6 +436,9 @@ uint8_t RadioRxPayload[255];
 
 bool IrqFired = false;
 
+const char bandwidthString[3][4]={"125","250","500"};
+const char coderateString[5][4]={[1]="4/5",[2]="4/6",[3]="4/7",[4]="4/8"};
+
 /*
  * SX126x DIO IRQ callback functions prototype
  */
@@ -696,6 +699,8 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
             break;
 
         case MODEM_LORA:
+            printf("Setting RX configs | SF: %u | bandwidth: %s | coderate: %s \n",
+			datarate, bandwidthString[bandwidth], coderateString[coderate] );
             SX126xSetStopRxTimerOnPreambleDetect( false );
             SX126x.ModulationParams.PacketType = PACKET_TYPE_LORA;
             SX126x.ModulationParams.Params.LoRa.SpreadingFactor = ( RadioLoRaSpreadingFactors_t )datarate;
@@ -756,7 +761,7 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
 
             // Timeout Max, Timeout handled directly in SetRx function
             RxTimeout = 0xFFFF;
-
+            printf("TRUE PreambleLenght: %u\n",SX126x.PacketParams.Params.LoRa.PreambleLength);
             break;
     }
 }
@@ -804,6 +809,9 @@ void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
             break;
 
         case MODEM_LORA:
+
+            printf("Setting TX Configs: Power: %d | SF: %u  | bandwidth: %s | coderate: %s \n", power, datarate, bandwidthString[bandwidth], coderateString[coderate]);
+
             SX126x.ModulationParams.PacketType = PACKET_TYPE_LORA;
             SX126x.ModulationParams.Params.LoRa.SpreadingFactor = ( RadioLoRaSpreadingFactors_t ) datarate;
             SX126x.ModulationParams.Params.LoRa.Bandwidth =  Bandwidths[bandwidth];
@@ -1063,6 +1071,8 @@ void RadioStandby( void )
 
 void RadioRx( uint32_t timeout )
 {
+    rx_timestamp = TimerGetCurrentTime();
+    printf("LoRaWAN RX open for %lu ms \n",timeout);
     SX126xSetDioIrqParams( IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_NONE,
@@ -1271,6 +1281,7 @@ void RadioIrqProcess( void )
         if( ( irqRegs & IRQ_TX_DONE ) == IRQ_TX_DONE )
         {
             TimerStop( &TxTimeoutTimer );
+            printf("\n///////////////Tx Time: %lums\\\\\\\\\\\\\\\\\\\n",TimerGetElapsedTime(tx_timestamp));
             //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
             SX126xSetOperatingMode( MODE_STDBY_RC );
             if( ( RadioEvents != NULL ) && ( RadioEvents->TxDone != NULL ) )

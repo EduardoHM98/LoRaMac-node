@@ -362,11 +362,11 @@ void RegionAU915InitDefaults( InitDefaultsParams_t* params )
             }
 
             // Initialize channels default mask
-            RegionNvmGroup2->ChannelsDefaultMask[0] = 0xFFFF;
-            RegionNvmGroup2->ChannelsDefaultMask[1] = 0xFFFF;
-            RegionNvmGroup2->ChannelsDefaultMask[2] = 0xFFFF;
-            RegionNvmGroup2->ChannelsDefaultMask[3] = 0xFFFF;
-            RegionNvmGroup2->ChannelsDefaultMask[4] = 0x00FF;
+            RegionNvmGroup2->ChannelsDefaultMask[0] = 0x0001;
+            RegionNvmGroup2->ChannelsDefaultMask[1] = 0x0000;
+            RegionNvmGroup2->ChannelsDefaultMask[2] = 0x0000;
+            RegionNvmGroup2->ChannelsDefaultMask[3] = 0x0000;
+            RegionNvmGroup2->ChannelsDefaultMask[4] = 0x0000;
             RegionNvmGroup2->ChannelsDefaultMask[5] = 0x0000;
 
             // Copy channels default mask
@@ -536,7 +536,7 @@ bool RegionAU915RxConfig( RxConfigParams_t* rxConfig, int8_t* datarate )
     Radio.SetChannel( frequency );
 
     // Radio configuration
-    Radio.SetRxConfig( MODEM_LORA, rxConfig->Bandwidth, phyDr, 1, 0, 8, rxConfig->WindowTimeout, false, 0, false, 0, 0, true, rxConfig->RxContinuous );
+    Radio.SetRxConfig( MODEM_LORA, rxConfig->Bandwidth, phyDr, 1, 0, 8, rxConfig->WindowTimeout, false, 0, false, 0, 0, false, rxConfig->RxContinuous );
 
     Radio.SetMaxPayloadLength( MODEM_LORA, MaxPayloadOfDatarateDwell0AU915[dr] + LORAMAC_FRAME_PAYLOAD_OVERHEAD_SIZE );
 
@@ -855,7 +855,7 @@ LoRaMacStatus_t RegionAU915NextChannel( NextChanParams_t* nextChanParams, uint8_
         if( nextChanParams->Joined == true )
         {
             // Choose randomly on of the remaining channels
-            *channel = enabledChannels[randr( 0, nbEnabledChannels - 1 )];
+            *channel = 0;//enabledChannels[randr( 0, nbEnabledChannels - 1 )];
         }
         else
         {

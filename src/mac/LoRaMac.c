@@ -962,10 +962,13 @@ static void ProcessRadioRxDone( void )
         return;
     }
 
+    printf("Received CMD Type: %u\n\n",macHdr.Bits.MType);
+
     switch( macHdr.Bits.MType )
     {
         case FRAME_TYPE_JOIN_ACCEPT:
         {
+            printf("OTA JOIN ACCEPT\n");
             // Check if the received frame size is valid
             if( size < LORAMAC_JOIN_ACCEPT_FRAME_MIN_SIZE )
             {
@@ -1529,22 +1532,27 @@ static void LoRaMacHandleIrqEvents( void )
     {
         if( events.Events.TxDone == 1 )
         {
+            printf("TX Done\n");
             ProcessRadioTxDone( );
         }
         if( events.Events.RxDone == 1 )
         {
+            printf("RX Done\n");
             ProcessRadioRxDone( );
         }
         if( events.Events.TxTimeout == 1 )
         {
+            printf("TX Timeout\n");
             ProcessRadioTxTimeout( );
         }
         if( events.Events.RxError == 1 )
         {
+			printf("RX Error\n");
             ProcessRadioRxError( );
         }
         if( events.Events.RxTimeout == 1 )
         {
+			printf("RX Timeout\n");
             ProcessRadioRxTimeout( );
         }
     }
@@ -1567,7 +1575,7 @@ bool LoRaMacIsBusy( void )
     {
         return false;
     }
-
+    printf("LoRaMAC Busy, check Rx1 and Rx2 window parameters \n");
     return true;
 }
 
@@ -1942,7 +1950,7 @@ static void OnRxWindow1TimerEvent( void* context )
     MacCtx.RxWindow1Config.Channel = MacCtx.Channel;
     MacCtx.RxWindow1Config.DrOffset = Nvm.MacGroup2.MacParams.Rx1DrOffset;
     MacCtx.RxWindow1Config.DownlinkDwellTime = Nvm.MacGroup2.MacParams.DownlinkDwellTime;
-    MacCtx.RxWindow1Config.RxContinuous = false;
+    MacCtx.RxWindow1Config.RxContinuous = true;
     MacCtx.RxWindow1Config.RxSlot = RX_SLOT_WIN_1;
     MacCtx.RxWindow1Config.NetworkActivation = Nvm.MacGroup2.NetworkActivation;
 
@@ -2890,8 +2898,8 @@ static void ComputeRxWindowParameters( void )
                                      &MacCtx.RxWindow2Config );
 
     // Default setup, in case the device joined
-    MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.ReceiveDelay1 + MacCtx.RxWindow1Config.WindowOffset + 200;
-    MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.ReceiveDelay2 + MacCtx.RxWindow2Config.WindowOffset + 200;
+    MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.ReceiveDelay1 + MacCtx.RxWindow1Config.WindowOffset + 4200;
+    MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.ReceiveDelay2 + MacCtx.RxWindow2Config.WindowOffset + 4200;
 
     if( MacCtx.TxMsg.Type != LORAMAC_MSG_TYPE_DATA )
     {
@@ -2999,6 +3007,7 @@ static LoRaMacStatus_t ScheduleTx( bool allowDelayedTx )
     // Setup the parameters based on the join status
     if( Nvm.MacGroup2.NetworkActivation == ACTIVATION_TYPE_NONE )
     {
+        printf("NO NETWORK ACTIVATION\n");
         nextChan.LastTxIsJoinRequest = true;
         nextChan.Joined = false;
     }
@@ -3329,6 +3338,7 @@ LoRaMacStatus_t PrepareFrame( LoRaMacHeader_t* macHdr, LoRaMacFrameCtrl_t* fCtrl
             // Reset confirm parameters
             MacCtx.McpsConfirm.NbTrans = 0;
             MacCtx.McpsConfirm.AckReceived = false;
+            printf("Uplink Counter: %d\n",fCntUp);
             MacCtx.McpsConfirm.UpLinkCounter = fCntUp;
 
             // Handle the MAC commands if there are any available
@@ -5310,6 +5320,7 @@ LoRaMacStatus_t LoRaMacMlmeRequest( MlmeReq_t* mlmeRequest )
     {
         case MLME_JOIN:
         {
+            printf("OTAA JOIN REQUEST\n");
             if( ( MacCtx.MacState & LORAMAC_TX_DELAYED ) == LORAMAC_TX_DELAYED )
             {
                 return LORAMAC_STATUS_BUSY;

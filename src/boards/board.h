@@ -39,6 +39,9 @@ enum BoardPowerSources
     BATTERY_POWER,
 };
 
+uint32_t extern tx_timestamp;
+uint32_t extern rx_timestamp;
+
 /*!
  * \brief Initializes the mcu.
  */

@@ -80,14 +80,14 @@
  *
  * \remark Please note that when ADR is enabled the end-device should be static
  */
-#define LORAWAN_ADR_STATE                           LORAMAC_HANDLER_ADR_ON
+#define LORAWAN_ADR_STATE                           LORAMAC_HANDLER_ADR_OFF
 
 /*!
  * Default datarate
  *
  * \remark Please note that LORAWAN_DEFAULT_DATARATE is used only when ADR is disabled 
  */
-#define LORAWAN_DEFAULT_DATARATE                    DR_2
+#define LORAWAN_DEFAULT_DATARATE                    DR_5
 
 /*!
  * LoRaWAN confirmed messages
@@ -145,6 +145,8 @@ static bool AppLedStateOn = false;
  * Timer to handle the application data transmission duty cycle
  */
 static TimerEvent_t TxTimer;
+uint32_t tx_timestamp = 0;
+uint32_t rx_timestamp = 0;
 
 static void OnTxTimerEvent( void* context );
 
@@ -257,7 +259,7 @@ int main( void )
     }
 
     // Set system maximum tolerated rx error in milliseconds
-    LmHandlerSetSystemMaxRxError( 20 );
+    LmHandlerSetSystemMaxRxError( 100 );
 
     // The LoRa-Alliance Compliance protocol package should always be
     // initialized and activated.
@@ -345,8 +347,9 @@ static void OnTxData( LmHandlerTxParams_t* params )
 
 static void OnRxData( LmHandlerAppData_t* appData, LmHandlerRxParams_t* params )
 {
+    printf("\n///////////////Rx Time: %lums\\\\\\\\\\\\\\\\\\\n",TimerGetElapsedTime(rx_timestamp));
     DisplayRxUpdate( appData, params );
-
+    
     switch( appData->Port )
     {
     case 1: 
@@ -423,17 +426,22 @@ static void PrepareTxFrame( void )
 
     AppData.Port = LORAWAN_APP_PORT;
 
-    CayenneLppReset( );
-    CayenneLppAddDigitalInput( channel++, AppLedStateOn );
-    CayenneLppAddAnalogInput( channel++, BoardGetBatteryLevel( ) * 100 / 254 );
+    // CayenneLppReset( );
+    // CayenneLppAddDigitalInput( channel++, AppLedStateOn );
+    // CayenneLppAddAnalogInput( channel++, BoardGetBatteryLevel( ) * 100 / 254 );
 
-    CayenneLppCopy( AppData.Buffer );
-    AppData.BufferSize = CayenneLppGetSize( );
+    // CayenneLppCopy( AppData.Buffer );
+    // AppData.BufferSize = CayenneLppGetSize( );
+
+    strcpy(AppData.Buffer, "ABCDEFGHIJKLMNOPQRSTUVWXYABCDEFGHIJKLMNOPQRSTUVWXYOPQRSTUVWXABCDEFGHIJKLMNOPQRSTUVWXYABCDEFGHIJKLMNOPQRSTUVWXYOPQRABCDEFGHIJKLMNOPQRSTUVWXYABCDEFGHIJKLMNOPQRSTUVWXYOPQRSTUVWXABCDEFGHIJKLMNOPQRSTUVWXYABCDEFGHIJKLMNOPQRSTUVWXYOPQR");
+    AppData.BufferSize = strlen(AppData.Buffer);
+    printf("\nPayload Size: %d\n", AppData.BufferSize);
 
     if( LmHandlerSend( &AppData, LmHandlerParams.IsTxConfirmed ) == LORAMAC_HANDLER_SUCCESS )
     {
 
     }
+    tx_timestamp = TimerGetCurrentTime();	
 }
 
 static void StartTxProcess( LmHandlerTxEvents_t txEvent )
